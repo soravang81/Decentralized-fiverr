@@ -1,0 +1,343 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NEXT_PUBLIC_DATABASE_URL")
+}
+
+model User {
+  id                      String                @id @default(uuid())
+  username                String                @unique
+  sub                     String                @default("")
+  name                    String?       
+  bio                     String?       
+  role                    UserRole              @default(BUYER)
+  profilePicture          String?       
+  password                String?       
+  solWalletId             String?               @unique
+  solWallet               SolWallet?        
+  provider                Provider        
+  sellerProfile           SellerProfile?        
+  gigsBought              Order[]               @relation("BuyerOrders")
+  reviews                 Review[]            
+}         
+
+model SellerProfile {         
+  id                      String                @id @default(uuid())
+  userId                  String                @unique
+  user                    User                  @relation(fields: [userId], references: [id])
+  bio                     String?           
+  skills                  String[]            
+  languages               String[]            
+  profilePicture          String?           
+  category                Category?           
+  niche                   Niche?            
+  subNiche                SubNiche?           
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  gigsCreated             Gig[]           
+  gigsSold                Order[]               @relation("SellerOrders")
+}             
+model SolWallet {             
+  id                      String                @id @default(uuid())
+  publicKey               String                
+  privateKey              String                
+  userId                  String                @unique
+  user                    User                  @relation(fields: [userId], references: [id])
+}             
+model Gig {             
+  id                      String                @id @default(uuid())
+  sellerId                String        
+  seller                  SellerProfile         @relation(fields: [sellerId], references: [id])
+  title                   String        
+  description             String        
+  category                Category        
+  niche                   Niche       
+  subNiche                SubNiche        
+  pricing                 PricingPackage[]      
+  revisions               Int                   @default(0)
+  tags                    String[]        
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  orders                  Order[]       
+}         
+model PricingPackage {          
+  id                      String                @id @default(uuid())
+  gigId                   String          
+  packageType             PackageType         
+  name                    String          
+  description             String          
+  price                   Float         
+  deliveryTime            Int        //in days 
+  revisions               Int                   @default(0)
+  features                String[]          
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  gig                     Gig                   @relation(fields: [gigId], references: [id])
+  orders                  Order[]         
+}         
+model Order {   
+  id                      String                @id @default(uuid())
+  packageId               String        
+  packageType             PackageType 
+  gigId                   String        
+  buyerId                 String        
+  sellerId                String        
+  status                  OrderStatus           @default(PENDING)
+  paymentStatus           PaymentStatus         @default(PENDING)
+  amount                  Float       
+  deadline                DateTime        
+  createdAt               DateTime              @default(now())
+  dispute                 Dispute?        
+  gig                     Gig                   @relation(fields: [gigId], references: [id])
+  buyer                   User                  @relation("BuyerOrders", fields: [buyerId], references: [id])
+  seller                  SellerProfile         @relation("SellerOrders", fields: [sellerId], references: [id])
+  package                 PricingPackage        @relation(fields: [packageId], references: [id])
+  review                  Review?       
+  transactions            Transaction[]       
+}
+model Dispute {
+  id                      String                @id @default(uuid())
+  orderId                 String                @unique
+  order                   Order                 @relation(fields: [orderId], references: [id])
+  description             String            
+  status                  String            
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  resolution              String?           
+}
+model Review {
+  id                      String                @id @default(uuid())
+  orderId                 String                @unique
+  order                   Order                 @relation(fields: [orderId], references: [id])
+  reviewerId              String            
+  reviewer                User                  @relation(fields: [reviewerId], references: [id])
+  rating                  Int           
+  comment                 String?           
+  createdAt               DateTime              @default(now())
+}
+model Transaction {
+  id                      String                @id @default(uuid())
+  orderId                 String    
+  order                   Order                 @relation(fields: [orderId], references: [id])
+  fromAddress             String    
+  toAddress               String    
+  amount                  Float   
+  currency                String    
+  txHash                  String                @unique
+  status                  String    
+  purpose                 TransactionPurpose    
+  createdAt               DateTime              @default(now())
+}
+enum PackageType {
+  BASIC
+  STANDARD
+  PREMIUM
+}
+enum TransactionPurpose {
+  BUYER_TO_ESCROW
+  ESCROW_TO_SELLER
+  ESCROW_TO_BUYER_REFUND
+  BUYER_TO_SELLER_TIP
+  PLATFORM_FEE
+}
+enum UserRole {
+  BUYER
+  SELLER
+  BOTH
+}
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  DISPUTED
+  CANCELLED
+  DELIVERED
+}
+enum PaymentStatus {
+  PENDING
+  HELD_IN_ESCROW
+  RELEASED
+  REFUNDED
+}
+enum Provider {
+  Google
+}
+enum Category {
+  GraphicsAndDesign
+  DigitalMarketing
+  WritingAndTranslation
+  VideoAndAnimation
+  MusicAndAudio
+  ProgrammingAndTech
+  Business
+  Lifestyle
+}
+
+enum Niche {
+  LogoDesign
+  BusinessCardsAndStationery
+  Illustration
+  FlyersAndBrochures
+  WebAndMobileDesign
+  SocialMediaMarketing
+  SEO
+  ContentMarketing
+  EmailMarketing
+  VideoMarketing
+  ArticlesAndBlogPosts
+  Translation
+  ProofreadingAndEditing
+  Copywriting
+  CreativeWriting
+  WhiteboardAndAnimatedExplainers
+  VideoEditing
+  ShortVideoAds
+  LogoAnimation
+  CharacterAnimation
+  VoiceOver
+  MixingAndMastering
+  ProducersAndComposers
+  SingersAndVocalists
+  SoundEffects
+  WebProgramming
+  MobileApps
+  ECommerceDevelopment
+  GameDevelopment
+  DataAnalysisAndReports
+  VirtualAssistant
+  MarketResearch
+  BusinessPlans
+  BrandingServices
+  FinancialConsulting
+  OnlineTutoring
+  Wellness
+  ArtsAndCrafts
+  RelationshipAdvice
+  PersonalStylists
+}
+
+enum SubNiche {
+  Minimalist
+  ThreeD
+  Mascot
+  HandDrawn
+  BusinessCards
+  StationeryDesign
+  ChildrensBook
+  Comics
+  Portraits
+  Flyers
+  Brochures
+  Leaflets
+  WebsiteDesign
+  AppDesign
+  LandingPageDesign
+  Instagram
+  Facebook
+  Twitter
+  LinkedIn
+  OnPageSEO
+  OffPageSEO
+  TechnicalSEO
+  BlogWriting
+  GuestPosting
+  ContentStrategy
+  EmailCampaigns
+  NewsletterDesign
+  EmailCopywriting
+  YouTubeMarketing
+  VideoSEO
+  VideoAds
+  SEOWriting
+  TechnicalWriting
+  GeneralTranslation
+  LegalTranslation
+  TechnicalTranslation
+  AcademicEditing
+  BookEditing
+  ResumeEditing
+  SalesCopy
+  AdCopy
+  ProductDescriptions
+  ShortStories
+  Poetry
+  Scriptwriting
+  WhiteboardAnimation
+  TwoDAnimation
+  ThreeDAnimation
+  YouTubeEditing
+  MusicVideoEditing
+  CommercialEditing
+  SocialMediaAds
+  ProductAds
+  EventAds
+  ThreeDLogoAnimation
+  IntroOutroAnimation
+  CustomAnimation
+  CartoonCharacter
+  ThreeDCharacter
+  GameCharacter
+  MaleVoice
+  FemaleVoice
+  CharacterVoice
+  SongMixing
+  PodcastMixing
+  AudioMastering
+  CustomMusic
+  Jingles
+  PodcastMusic
+  MaleSingers
+  FemaleSingers
+  BackgroundVocals
+  CustomSoundEffects
+  GameSounds
+  Foley
+  FrontendDevelopment
+  BackendDevelopment
+  FullStackDevelopment
+  iOSDevelopment
+  AndroidDevelopment
+  HybridApps
+  Shopify
+  WooCommerce
+  Magento
+  Unity
+  UnrealEngine
+  TwoDGameDevelopment
+  DataVisualization
+  DataMining
+  DataEngineering
+  AdminSupport
+  DataEntry
+  Research
+  CompetitorAnalysis
+  SurveyDesign
+  MarketAnalysis
+  StartupPlans
+  InvestorPlans
+  StrategicPlans
+  BrandStrategy
+  BrandNaming
+  BrandGuidelines
+  FinancialPlanning
+  Accounting
+  BusinessValuation
+  LanguageLessons
+  MusicLessons
+  FitnessCoaching
+  Meditation
+  LifeCoaching
+  DietPlans
+  CustomArtwork
+  HandmadeCrafts
+  CraftLessons
+  DatingAdvice
+  MarriageCounseling
+  BreakupAdvice
+  FashionAdvice
+  PersonalShopping
+  WardrobeStyling
+}
