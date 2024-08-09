@@ -34,25 +34,22 @@ export const deleteGig = async ({gigId , sellerId}:{gigId : string , sellerId : 
         return false
     }
 }
-export const editGig = async ({gig , gigId}:{gig:CreateGigInput , gigId : string}) =>{
-    try { 
+export const editGig = async ({ gig, gigId }: { gig: CreateGigInput, gigId: string }) => {
+    try {
+        const updateData = Object.fromEntries(
+            Object.entries(gig).filter(([_, value]) => value !== undefined)
+        );
+
         await prisma.gig.update({
-            where : {
-                id : gigId
+            where: {
+                id: gigId,
             },
-            data : {
-                sellerId : gig.sellerId,
-                title : gig.title,
-                description : gig.description,
-                category : gig.category,
-                niche : gig.niche,
-                subNiche : gig.subNiche,
-                tags : gig.tags,
-            }
-        })
-        return true
+            data: updateData,
+        });
+
+        return true;
     } catch (e) {
-        console.error(e)
-        return false
+        console.error(e);
+        return false;
     }
-}
+};

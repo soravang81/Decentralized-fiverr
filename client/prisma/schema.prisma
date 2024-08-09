@@ -15,10 +15,9 @@ model User {
   name                    String?       
   bio                     String?       
   role                    UserRole              @default(BUYER)
-  profilePicture          String?       
+  lastRole                UserRole              @default(BUYER)
+  profilePicture          String                @default("https://firebasestorage.googleapis.com/v0/b/chatapp-4deee.appspot.com/o/ProfilePics%2Fdefault-pic.jpg?alt=media&token=53c51d35-079f-4e2e-addc-c6b40cfe8630")        
   password                String?       
-  solWalletId             String?               @unique
-  solWallet               SolWallet?        
   provider                Provider        
   sellerProfile           SellerProfile?        
   gigsBought              Order[]               @relation("BuyerOrders")
@@ -32,7 +31,7 @@ model SellerProfile {
   bio                     String?           
   skills                  String[]            
   languages               String[]            
-  profilePicture          String?           
+  profilePicture          String                @default("https://firebasestorage.googleapis.com/v0/b/chatapp-4deee.appspot.com/o/ProfilePics%2Fdefault-pic.jpg?alt=media&token=53c51d35-079f-4e2e-addc-c6b40cfe8630")        
   category                Category?           
   niche                   Niche?            
   subNiche                SubNiche?           
@@ -40,14 +39,7 @@ model SellerProfile {
   updatedAt               DateTime              @updatedAt
   gigsCreated             Gig[]           
   gigsSold                Order[]               @relation("SellerOrders")
-}             
-model SolWallet {             
-  id                      String                @id @default(uuid())
-  publicKey               String                
-  privateKey              String                
-  userId                  String                @unique
-  user                    User                  @relation(fields: [userId], references: [id])
-}             
+}                    
 model Gig {             
   id                      String                @id @default(uuid())
   sellerId                String        
@@ -79,7 +71,7 @@ model PricingPackage {
   gig                     Gig                   @relation(fields: [gigId], references: [id])
   orders                  Order[]         
 }         
-model Order {   
+model Order {    
   id                      String                @id @default(uuid())
   packageId               String        
   packageType             PackageType 

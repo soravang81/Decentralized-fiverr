@@ -2,6 +2,7 @@ import { Category, Niche, SubNiche } from "./niches";
 
 // Enums
 enum UserRole {
+    BOTH="BOTH",
     BUYER = 'BUYER',
     SELLER = 'SELLER'
   }
