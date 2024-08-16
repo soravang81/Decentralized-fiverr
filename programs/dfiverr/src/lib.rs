@@ -14,7 +14,7 @@ pub mod d_fiverr {
         escrow.is_completed = false;
         escrow.client_agreed = false;
         escrow.freelancer_agreed = false;
-        escrow.owner = *ctx.accounts.owner.key; // Changed this line
+        escrow.owner = *ctx.accounts.owner.key; 
 
         // Transfer funds from client to escrow account
         let cpi_context = CpiContext::new(
@@ -97,7 +97,7 @@ pub mod d_fiverr {
         );
         anchor_lang::system_program::transfer(cpi_context, amount)?;
     
-        // Optionally, you can mark the escrow as paid or close the account here
+        // Optionally, we can mark the escrow as paid or close the account here , leaving for now
         // ctx.accounts.escrow.is_paid = true;
     
         Ok(())
@@ -151,7 +151,7 @@ pub struct Escrow {
     pub is_completed: bool,
     pub client_agreed: bool,
     pub freelancer_agreed: bool,
-    pub owner: Pubkey,  // Make sure this field is present
+    pub owner: Pubkey,
 }
 
 #[error_code]
