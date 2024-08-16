@@ -7,16 +7,15 @@ import { authConfig } from "@/lib/auth"
 import { redirect } from "next/navigation"
 
    
-export default async function SellerProfile () {
+export default async function CreateSellerProfile () {
 
     const session = await getServerSession(authConfig)
     const role = session && await getLastRole(session?.user.id)
-    console.log()
-    role !== "BUYER" ?? redirect("/")
-    return (
-        <Container className="px-40">
-            <NavigationBar/>
-            <PersonalInfo/>
-        </Container>
-    )
+    console.log(role)
+    role !== "BUYER" ? redirect("/seller_dashboard") : null
+    
+    return <Container className="px-40">
+        {/* <NavigationBar/> */}
+        <PersonalInfo session={session}/>
+    </Container>
 }

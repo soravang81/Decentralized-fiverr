@@ -352,13 +352,13 @@ export enum SubNiche {
   PersonalShopping = "PersonalShopping",
   WardrobeStyling = "WardrobeStyling",
 }
-interface NicheMapping {
+export interface NicheMapping {
   category: Category;
   niches: {
     [key in Niche]?: SubNiche[];
   };
 }
-const nicheMappings: NicheMapping[] = [
+export const nicheMappings: NicheMapping[] = [
   {
     category: Category.GraphicsAndDesign,
     niches: {
@@ -601,3 +601,4 @@ const nicheMappings: NicheMapping[] = [
     }
   }
 ];
+

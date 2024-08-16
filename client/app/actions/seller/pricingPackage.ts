@@ -12,7 +12,6 @@ export const createPricingPackage = async (packages: PricingPackageInput) => {
                 description: packages.description,
                 price: packages.price,
                 deliveryTime: packages.deliveryTime,
-                revisions: packages.revisions,
                 features: packages.features
             }
         });

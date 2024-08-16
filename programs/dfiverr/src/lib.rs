@@ -1,26 +1,27 @@
 use anchor_lang::prelude::*;
 
-declare_id!("9Mp2QPxUAhrUJWFU2oseLe9xgq8bLPdZnjmgtQycySwt");
+declare_id!("6t7FU5ZA1A38w4tgAPVqR3bYx9CwoctqgPtQ7oFMJtn");
 
 #[program]
 pub mod d_fiverr {
     use super::*;
 
-    pub fn initialize_escrow(ctx: Context<InitializeEscrow>, amount: u64) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>, client : Pubkey , freelancer : Pubkey , amount : u64 )-> Result<()> {
         let escrow = &mut ctx.accounts.escrow;
-        let client = &ctx.accounts.client;
-
-        escrow.client = client.key();
-        escrow.freelancer = Pubkey::default();
+        escrow.client = client;
+        escrow.freelancer = freelancer;
         escrow.amount = amount;
         escrow.is_completed = false;
+        escrow.client_agreed = false;
+        escrow.freelancer_agreed = false;
+        escrow.owner = *ctx.accounts.owner.key; // Changed this line
 
         // Transfer funds from client to escrow account
         let cpi_context = CpiContext::new(
-            ctx.accounts.system_program.to_account_info(),
+            ctx.accounts.token_program.to_account_info(),
             anchor_lang::system_program::Transfer {
-                from: client.to_account_info(),
-                to: escrow.to_account_info(),
+                from: ctx.accounts.client.to_account_info(),
+                to: ctx.accounts.escrow.to_account_info(),
             },
         );
         anchor_lang::system_program::transfer(cpi_context, amount)?;
@@ -28,81 +29,118 @@ pub mod d_fiverr {
         Ok(())
     }
 
-    pub fn set_freelancer(ctx: Context<SetFreelancer>, freelancer: Pubkey) -> Result<()> {
+    pub fn mark_completed(ctx: Context<MarkCompleted>, party: String) -> Result<()> {
         let escrow = &mut ctx.accounts.escrow;
-        require!(escrow.freelancer == Pubkey::default(), ErrorCode::FreelancerAlreadySet);
-        escrow.freelancer = freelancer;
+    
+        match party.as_str() {
+            "client" => {
+                require!(ctx.accounts.signer.key() == escrow.client, ErrorCode::Unauthorized);
+                escrow.client_agreed = true;
+            },
+            "freelancer" => {
+                require!(ctx.accounts.signer.key() == escrow.freelancer, ErrorCode::Unauthorized);
+                escrow.freelancer_agreed = true;
+            },
+            _ => return Err(ErrorCode::InvalidParty.into()),
+        }
+    
+        if escrow.client_agreed && escrow.freelancer_agreed {
+            escrow.is_completed = true;
+        }
+    
         Ok(())
     }
 
-    pub fn release_to_freelancer(ctx: Context<ReleaseToFreelancer>) -> Result<()> {
+    pub fn resolve_dispute(ctx: Context<ResolveDispute>, recipient: Pubkey) -> Result<()> {
+        let escrow = &ctx.accounts.escrow;
+    
+        // Ensure only the contract owner (you) can resolve disputes
+        require!(ctx.accounts.owner.key() == escrow.owner, ErrorCode::Unauthorized);
+    
+        // Ensure the recipient is either the client or the freelancer
+        require!(
+            recipient == escrow.client || recipient == escrow.freelancer,
+            ErrorCode::InvalidRecipient
+        );
+    
+        // Transfer funds to the specified recipient
+        let cpi_context = CpiContext::new(
+            ctx.accounts.token_program.to_account_info(),
+            anchor_lang::system_program::Transfer {
+                from: ctx.accounts.escrow.to_account_info(),
+                to: ctx.accounts.recipient.to_account_info(),
+            },
+        );
+        anchor_lang::system_program::transfer(cpi_context, escrow.amount)?;
+    
+        // Mark the escrow as completed
         let escrow = &mut ctx.accounts.escrow;
-        let freelancer = &ctx.accounts.freelancer;
-
-        require!(!escrow.is_completed, ErrorCode::EscrowAlreadyCompleted);
-        require!(escrow.freelancer == freelancer.key(), ErrorCode::InvalidFreelancer);
-
-        let amount = escrow.amount;
-
-        // Transfer funds from escrow to freelancer
-        **escrow.to_account_info().try_borrow_mut_lamports()? -= amount;
-        **freelancer.to_account_info().try_borrow_mut_lamports()? += amount;
-
         escrow.is_completed = true;
-
+    
         Ok(())
     }
 
-    pub fn revert_to_client(ctx: Context<RevertToClient>) -> Result<()> {
-        let escrow = &mut ctx.accounts.escrow;
-        let client = &ctx.accounts.client;
-
-        require!(!escrow.is_completed, ErrorCode::EscrowAlreadyCompleted);
-        require!(escrow.client == client.key(), ErrorCode::InvalidClient);
-
-        let amount = escrow.amount;
-
-        // Transfer funds from escrow back to client
-        **escrow.to_account_info().try_borrow_mut_lamports()? -= amount;
-        **client.to_account_info().try_borrow_mut_lamports()? += amount;
-
-        escrow.is_completed = true;
-
+    pub fn release_funds(ctx: Context<ReleaseFunds>) -> Result<()> {
+        // Check if the escrow is completed
+        require!(ctx.accounts.escrow.is_completed, ErrorCode::EscrowNotCompleted);
+    
+        // Get the amount to transfer
+        let amount   = ctx.accounts.escrow.amount;
+    
+        // Transfer funds to the freelancer
+        let cpi_context = CpiContext::new(
+            ctx.accounts.token_program.to_account_info(),
+            anchor_lang::system_program::Transfer {
+                from: ctx.accounts.escrow.to_account_info(),
+                to: ctx.accounts.freelancer.to_account_info(),
+            },
+        );
+        anchor_lang::system_program::transfer(cpi_context, amount)?;
+    
+        // Optionally, you can mark the escrow as paid or close the account here
+        // ctx.accounts.escrow.is_paid = true;
+    
         Ok(())
     }
 }
 
 #[derive(Accounts)]
-pub struct InitializeEscrow<'info> {
-    #[account(init, payer = client, space = 8 + 32 + 32 + 8 + 1)]
+pub struct Initialize<'info> {
+    #[account(init, payer = client, space = 8 + 32 + 32 + 8 + 1 + 1 + 1 + 32)]
     pub escrow: Account<'info, Escrow>,
     #[account(mut)]
     pub client: Signer<'info>,
+    /// CHECK: This is the owner of the program
+    pub owner: AccountInfo<'info>,
     pub system_program: Program<'info, System>,
+    pub token_program: Program<'info, anchor_lang::system_program::System>,
 }
 
 #[derive(Accounts)]
-pub struct SetFreelancer<'info> {
+pub struct MarkCompleted<'info> {
     #[account(mut)]
     pub escrow: Account<'info, Escrow>,
-    pub client: Signer<'info>,
+    pub signer: Signer<'info>,
 }
 
 #[derive(Accounts)]
-pub struct ReleaseToFreelancer<'info> {
+pub struct ResolveDispute<'info> {
     #[account(mut)]
     pub escrow: Account<'info, Escrow>,
+    pub owner: Signer<'info>,
+    /// CHECK: This account is not read or written in this instruction, it's just used as the recipient for funds transfer
     #[account(mut)]
-    /// CHECK: This is safe because we're transferring to this account
+    pub recipient: AccountInfo<'info>,
+    pub token_program: Program<'info, anchor_lang::system_program::System>,
+}
+#[derive(Accounts)]
+pub struct ReleaseFunds<'info> {
+    #[account(mut)]
+    pub escrow: Account<'info, Escrow>,
+    /// CHECK: This account is not read in this instruction, it's just used as the recipient for funds transfer
+    #[account(mut)]
     pub freelancer: AccountInfo<'info>,
-}
-
-#[derive(Accounts)]
-pub struct RevertToClient<'info> {
-    #[account(mut)]
-    pub escrow: Account<'info, Escrow>,
-    #[account(mut)]
-    pub client: Signer<'info>,
+    pub token_program: Program<'info, anchor_lang::system_program::System>,
 }
 
 #[account]
@@ -111,16 +149,19 @@ pub struct Escrow {
     pub freelancer: Pubkey,
     pub amount: u64,
     pub is_completed: bool,
+    pub client_agreed: bool,
+    pub freelancer_agreed: bool,
+    pub owner: Pubkey,  // Make sure this field is present
 }
 
 #[error_code]
 pub enum ErrorCode {
-    #[msg("Freelancer has already been set")]
-    FreelancerAlreadySet,
-    #[msg("Escrow has already been completed")]
-    EscrowAlreadyCompleted,
-    #[msg("Invalid freelancer")]
-    InvalidFreelancer,
-    #[msg("Invalid client")]
-    InvalidClient,
+    #[msg("Invalid party specified")]
+    InvalidParty,
+    #[msg("Unauthorized action")]
+    Unauthorized,
+    #[msg("Invalid recipient")]
+    InvalidRecipient,
+    #[msg("Escrow not completed")]
+    EscrowNotCompleted,
 }

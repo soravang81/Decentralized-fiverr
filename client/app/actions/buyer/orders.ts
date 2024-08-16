@@ -1,11 +1,12 @@
 "use server"
 import prisma from "@/app/db/db"
-import { CreateOrderInput, OrderStatus, PaymentStatus } from "@/lib/types"
+import { CreateEscrowParams, CreateOrderInput } from "@/lib/types"
 
-export const createOrder = async(order:CreateOrderInput) =>{
+export const createOrder = async({order,escrow}:{order:CreateOrderInput , escrow : CreateEscrowParams}) =>{
     try {
-        await prisma.order.create({
+        const odr = prisma.order.create({
             data : {
+                escrowId : order.escrowId,
                 packageId : order.packageId,
                 packageType : order.packageType,
                 gigId : order.gigId,
@@ -15,6 +16,16 @@ export const createOrder = async(order:CreateOrderInput) =>{
                 deadline : order.deadline
             }
         })
+        const esc =  prisma.escrow.create({
+            data: {
+                orderId: escrow.orderId,
+                address: escrow.address.toString(),
+                client: escrow.client.toString(),
+                receiver: escrow.receiver.toString(),
+                amount: escrow.amount,              
+            }
+        })
+        await Promise.all([odr , esc])
         return true
     } catch (err) {
         console.error(err)

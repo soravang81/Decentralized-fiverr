@@ -20,40 +20,44 @@ model User {
   password                String?       
   provider                Provider        
   sellerProfile           SellerProfile?        
-  gigsBought              Order[]               @relation("BuyerOrders")
+  orders                  Order[]               @relation("BuyerOrders")
   reviews                 Review[]            
 }         
 
 model SellerProfile {         
   id                      String                @id @default(uuid())
   userId                  String                @unique
-  user                    User                  @relation(fields: [userId], references: [id])
-  bio                     String?           
-  skills                  String[]            
-  languages               String[]            
-  profilePicture          String                @default("https://firebasestorage.googleapis.com/v0/b/chatapp-4deee.appspot.com/o/ProfilePics%2Fdefault-pic.jpg?alt=media&token=53c51d35-079f-4e2e-addc-c6b40cfe8630")        
-  category                Category?           
-  niche                   Niche?            
-  subNiche                SubNiche?           
+  name                    String
+  description             String      
+  course                  String?
+  institute               String?  
+  startDate               Int?
+  endDate                 Int?
+  wallet                  String?       
+  phoneNumber             String?    
+  website                 String?         
+  profilePicture          String                @default("https://firebasestorage.googleapis.com/v0/b/chatapp-4deee.appspot.com/o/ProfilePics%2Fdefault-pic.jpg?alt=media&token=53c51d35-079f-4e2e-addc-c6b40cfe8630")              
+  subNiche                SubNiche[]            
   createdAt               DateTime              @default(now())
   updatedAt               DateTime              @updatedAt
-  gigsCreated             Gig[]           
-  gigsSold                Order[]               @relation("SellerOrders")
+  gigs                    Gig[]           
+  orders                  Order[]               @relation("SellerOrders")
+  user                    User                  @relation(fields: [userId], references: [id])
 }                    
 model Gig {             
   id                      String                @id @default(uuid())
   sellerId                String        
-  seller                  SellerProfile         @relation(fields: [sellerId], references: [id])
   title                   String        
-  description             String        
+  description             String
+  picture                 String?                
   category                Category        
   niche                   Niche       
-  subNiche                SubNiche        
+  subNiche                SubNiche      
   pricing                 PricingPackage[]      
-  revisions               Int                   @default(0)
-  tags                    String[]        
+  tags                    String[]              
   createdAt               DateTime              @default(now())
   updatedAt               DateTime              @updatedAt
+  seller                  SellerProfile         @relation(fields: [sellerId], references: [id])
   orders                  Order[]       
 }         
 model PricingPackage {          
@@ -64,7 +68,6 @@ model PricingPackage {
   description             String          
   price                   Float         
   deliveryTime            Int        //in days 
-  revisions               Int                   @default(0)
   features                String[]          
   createdAt               DateTime              @default(now())
   updatedAt               DateTime              @updatedAt
@@ -90,6 +93,29 @@ model Order {
   package                 PricingPackage        @relation(fields: [packageId], references: [id])
   review                  Review?       
   transactions            Transaction[]       
+  escrow                  Escrow? 
+}
+model Escrow {
+  id                      String                @id @default(uuid())
+  orderId                 String                @unique
+  order                   Order                 @relation(fields: [orderId], references: [id])
+  address                 String                @unique
+  client                  String                
+  receiver                String
+  amount                  Float
+  status                  EscrowStatus          @default(PENDING)
+  sentTo                  EscrowUsers? 
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  resolvedAt              DateTime?
+  transactionId           String?
+}
+
+enum EscrowStatus {
+  PENDING
+  COMPLETED
+  DISPUTED
+  RESOLVED
 }
 model Dispute {
   id                      String                @id @default(uuid())
@@ -129,6 +155,10 @@ enum PackageType {
   STANDARD
   PREMIUM
 }
+enum EscrowUsers {
+  CLIENT
+  RECEIVER
+}
 enum TransactionPurpose {
   BUYER_TO_ESCROW
   ESCROW_TO_SELLER
@@ -156,6 +186,7 @@ enum PaymentStatus {
 }
 enum Provider {
   Google
+  Github
 }
 enum Category {
   GraphicsAndDesign

@@ -1,20 +1,41 @@
+import { PublicKey } from "@solana/web3.js";
 import { Category, Niche, SubNiche } from "./niches";
+import { EscrowStatus, EscrowUsers } from "@prisma/client";
 
 // Enums
-enum UserRole {
-    BOTH="BOTH",
-    BUYER = 'BUYER',
-    SELLER = 'SELLER'
-  }
-  
-export enum OrderStatus {
-  PENDING = 'PENDING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-  DISPUTED = 'DISPUTED'
+export enum UserRole {
+  BOTH="BOTH",
+  BUYER = 'BUYER',
+  SELLER = 'SELLER'
 }
-
+export type TOrderStatus = {
+  PENDING : 'PENDING',
+  PROCESSING : 'PROCESSING',
+  DELIVERED : 'DELIVERED',
+  CANCELLED : 'CANCELLED',
+  DISPUTED : 'DISPUTED'
+}
+export interface CreateEscrowParams {
+  // Fields from your Escrow model
+  orderId: string;
+  address: PublicKey;
+  client: PublicKey;
+  receiver: PublicKey;
+  amount: number;
+  status: EscrowStatus;
+  sentTo?: EscrowUsers;
+  transactionId?: string;
+}
+export type TEscrowStatus = {
+  PENDING : "PENDING"
+  COMPLETED : "COMPLETED"
+  DISPUTED : "DISPUTED"
+  RESOLVED : "RESOLVED"
+}
+export type TEscrowUsers = {
+  CLIENT : "CLIENT", 
+  RECEIVER : "RECEIVER"
+}
 export enum PaymentStatus {
   PENDING = 'PENDING',
   HELD_IN_ESCROW = 'HELD_IN_ESCROW',
@@ -42,7 +63,7 @@ export interface PricingPackageInput {
   description: string;
   price: number;
   deliveryTime: number;
-  revisions: number;
+  // revisions: number;
   features: string[];
 }
 
@@ -51,6 +72,7 @@ export interface CreateGigInput {
   title: string;
   description: string;
   category: Category;
+  picture: string;
   niche: Niche;
   subNiche: SubNiche;
   revisions?: number;
@@ -65,7 +87,7 @@ export interface CreateOrderInput {
   sellerId: string;
   amount: number;
   deadline: Date;
-  status?: OrderStatus;
+  status?: TOrderStatus;
   paymentStatus?: PaymentStatus;
 }
 
@@ -111,10 +133,24 @@ export interface CreatePricingPackageInput {
     description: string;
     price: number;
     deliveryTime: number;
-    revisions: number;
+    // revisions: number;
     features: string[];
   }
 export interface CreateSellerProfileInput {
+  userId: string;
+  name : string;
+  description : string;
+  personalWebsite?: string;
+  course? : string,
+  wallet : PublicKey | string
+  institute? : string;
+  startDate?: number;
+  endDate?: number;
+  phoneNumber?: string;
+  profilePicture?: string;
+  subNiche?: SubNiche[]
+}
+export interface UpdateSellerProfileInput {
   userId: string;
   bio?: string;
   skills: string[];

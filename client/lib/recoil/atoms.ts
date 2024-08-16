@@ -14,3 +14,11 @@ export const isDialog = atom<boolean>({
     key: "isDialog",
     default: false
 })
+export const SellerProfileImage = atom<string>({
+    key: "SellerProfileImage",
+    default: ""
+})
+export const currentImage = atom<string>({
+    key: "currentImage",
+    default: ""
+})

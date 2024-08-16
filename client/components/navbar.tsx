@@ -1,24 +1,24 @@
-import WalletConnect from "./walletConnect";
+// "use client"
 import { ProfileMenu } from "./profileMenu";
 import { LoginButton, RoleToggleButton } from "./buttons";
-import { getServerSession, Session } from "next-auth";
-import { authConfig } from "@/lib/auth";
+const CustomWalletMultiButton = dynamic(() => import('@/components/buttons'),{ ssr: false });
+import { Session } from "next-auth";
 import Link from "next/link";
-import { getLastRole } from "@/app/actions/buyer/role";
-import { getSellerProfileImage } from "@/app/actions/seller/sellerProfile";
+import dynamic from "next/dynamic";
+import { SellerNavbar } from "./sellerNavbar";
 
-export default async function Navbar ({session}:{session:Session | null}) {
-    // const session = await getServerSession(authConfig);
-    const role = session && await getLastRole(session.user.id)
-
+export default function Navbar ({session}:{session:Session | null}) {
     return (
         <div className="w-screen border shadow-md text-3xl px-10 py-2 flex justify-between items-center">
-            <Link href={"/"}><span className="font-bold">DFiverr</span></Link>
+            <section className="flex items-center">
+                <Link href={"/"}><span className="font-bold">DFiverr</span></Link>
+                <SellerNavbar sellerId={""}/>
+            </section>
             <section className="flex justify-between items-center">
-                {session && role && <>
+                {session && <>
                     <RoleToggleButton session={session}/>
-                    <WalletConnect/>
-                    {session && role && <ProfileMenu session={session}/>}
+                    <CustomWalletMultiButton/> 
+                    {session && <ProfileMenu session={session}  />}
                 </>}
                 <LoginButton session={session}/>
             </section>  

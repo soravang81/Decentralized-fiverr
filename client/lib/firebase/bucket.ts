@@ -1,3 +1,5 @@
+"use server"
+
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { v4 } from "uuid"
 import { bucket } from "./index"

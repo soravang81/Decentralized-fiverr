@@ -8,7 +8,7 @@ type ContainerProps = {
 export const Container = ({ children , className}: ContainerProps) => {
     
     return (
-        <div className={cn("md:m-8 sm:m-6 m-3" , className)}>
+        <div className={cn("lg:px-56 md:px-28 sm:px-18 p-10" , className)}>
             {children}
         </div>
     );

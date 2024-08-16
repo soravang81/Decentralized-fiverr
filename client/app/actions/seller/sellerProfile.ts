@@ -1,21 +1,63 @@
 "use server"
 import prisma from "@/app/db/db"
 import { CreateSellerProfileInput } from "@/lib/types"
+import { SellerProfile } from "@prisma/client"
 
 export const createSellerProfile = async (data : CreateSellerProfileInput) =>{
     try {
-        await prisma.sellerProfile.create({
+        const sp = prisma.sellerProfile.create({
             data: {
                 userId : data.userId,
-                bio : data.bio,
-                skills : data.skills,
-                languages : data.languages,
-                category : data.category,
-                niche : data.niche,
-                subNiche : data.subNiche
+                name : data.name,
+                description : data.description,
+                subNiche : data.subNiche,
+                website : data.personalWebsite,
+                wallet : data.wallet.toString(),
+                course : data.course,
+                institute : data.institute,
+                startDate : data.startDate,
+                endDate : data.endDate,
+                phoneNumber : data.phoneNumber,
             }
         })
+        const user = prisma.user.update({
+            where : {id : data.userId},
+            data : { role : "BOTH"}
+        })
+        await Promise.all([user, user])
         return true
+    } catch (err) {
+        console.error('Error creating seller profile : ', err)
+        return false
+    }
+}
+export const getSellerProfile = async (id:string) =>{
+    try {
+        const profile = await prisma.sellerProfile.findUnique({
+            where: {
+                userId : id,
+            },
+            select : {
+                id : true,
+                userId : true,
+                name : true,
+                description : true,
+                subNiche : true,
+                website : true,
+                wallet : true,
+                course : true,
+                institute : true,
+                startDate : true,
+                endDate : true,
+                phoneNumber : true,
+                profilePicture : true,
+                createdAt : true,
+                updatedAt : true,
+                orders : true,
+                // gigs : true
+            }
+        })
+        return profile
     } catch (err) {
         console.error('Error creating seller profile : ', err)
         return false
@@ -42,11 +84,13 @@ export const updateSellerProfile = async ({ id, data }: { id: string, data: Crea
 };
 
 export const getSellerProfileImage = async (id:string) => {
+    console.log("inside seller profile")
     try {
         const sp = await prisma.sellerProfile.findFirst({
             where : { userId : id } ,
             select : { profilePicture : true }
         })
+        // console.log(sp)
         return sp?.profilePicture
     } catch (err) {
         console.error(err)

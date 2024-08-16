@@ -4,42 +4,22 @@ import { MessageCircleOff, Trash, UserX } from "lucide-react";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,} from "./ui/alert-dialog";
-import { currentRole, isDialog } from "@/lib/recoil/atoms";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { useEffect, useState } from "react";
+import { isDialog } from "@/lib/recoil/atoms";
+import { useRecoilState } from "recoil";
+import { useState } from "react";
 import { Avatar, AvatarImage } from "./ui/avatar";
-import { UserRole } from "@prisma/client";
 import { Session } from "next-auth";
-import { getSellerProfileImage } from "@/app/actions/seller/sellerProfile";
+import { useUserImage } from "@/lib/recoil/selector";
 
 const handleClick = async(action: string) => {
 
 };
 
-export function ProfileMenu({session}:{session : Session }) {
+export function ProfileMenu({session, }:{session : Session }) {
   const [isDialogOpen, setIsDialogOpen] = useRecoilState(isDialog);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedAction, setSelectedAction] = useState("");
-  const [image, setImage] = useState<string | undefined>(session.user.image);
-  const role = useRecoilValue(currentRole);
-
-  const newImage = async () => { // to update the image when role is changed
-    console.log(role  , " " , session)
-    if (role === "SELLER") {
-      console.log("inside ! buyerr")
-      const img = await getSellerProfileImage(session.user.id);
-      console.log(img)
-      img && setImage(img ?? session.user.image ?? "");
-    }
-    else {
-      console.log("elsesession",session)
-      setImage(session.user.image)
-    }
-  };
-
-  useEffect(() => {
-    newImage();
-  }, [role, image]);
+  const img = useUserImage();
 
   const handleDropdownClose = () => {
     setDropdownOpen(false);
@@ -56,7 +36,7 @@ export function ProfileMenu({session}:{session : Session }) {
       <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <DropdownMenuTrigger asChild>
           <Avatar>
-            <AvatarImage src={image} alt="user" onClick={() => setDropdownOpen(!dropdownOpen)}/>
+            {img && <AvatarImage src={img} alt="user" onClick={() => setDropdownOpen(!dropdownOpen)}/>}
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 self-start flex flex-col">
