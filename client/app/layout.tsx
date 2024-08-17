@@ -3,11 +3,12 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import Navbar from "@/components/navbar";
-import { RoleBasedRedirect } from "@/components/rolebasedRedirect";
+import { RoleBasedRedirectWrapper } from "@/components/rolebasedRedirect";
 import { getServerSession, Session } from "next-auth";
 import { authConfig } from "@/lib/auth";
 import { getLastRole } from "./actions/buyer/role";
 import { UserRole } from "@prisma/client";
+import { RoleBasedRedirect } from "@/components/rolebased";
 
 const inter = Inter({ subsets: ["latin"] });
 

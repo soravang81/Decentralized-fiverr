@@ -1,12 +1,12 @@
 use anchor_lang::prelude::*;
 
-declare_id!("6t7FU5ZA1A38w4tgAPVqR3bYx9CwoctqgPtQ7oFMJtn");
+declare_id!("GnrHaj1hB4BqKbiWiCWKA6BwkUaF2zmywsaLcGAtTtbj");
 
 #[program]
 pub mod d_fiverr {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>, client : Pubkey , freelancer : Pubkey , amount : u64 )-> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>, client: Pubkey, freelancer: Pubkey, amount: u64) -> Result<()> {
         let escrow = &mut ctx.accounts.escrow;
         escrow.client = client;
         escrow.freelancer = freelancer;
@@ -15,17 +15,17 @@ pub mod d_fiverr {
         escrow.client_agreed = false;
         escrow.freelancer_agreed = false;
         escrow.owner = *ctx.accounts.owner.key; 
-
+    
         // Transfer funds from client to escrow account
         let cpi_context = CpiContext::new(
-            ctx.accounts.token_program.to_account_info(),
+            ctx.accounts.system_program.to_account_info(),
             anchor_lang::system_program::Transfer {
                 from: ctx.accounts.client.to_account_info(),
                 to: ctx.accounts.escrow.to_account_info(),
             },
         );
         anchor_lang::system_program::transfer(cpi_context, amount)?;
-
+    
         Ok(())
     }
 
@@ -52,9 +52,9 @@ pub mod d_fiverr {
     }
 
     pub fn resolve_dispute(ctx: Context<ResolveDispute>, recipient: Pubkey) -> Result<()> {
-        let escrow = &ctx.accounts.escrow;
+        let escrow = &mut ctx.accounts.escrow;
     
-        // Ensure only the contract owner (you) can resolve disputes
+        // Ensure only the contract owner can resolve disputes
         require!(ctx.accounts.owner.key() == escrow.owner, ErrorCode::Unauthorized);
     
         // Ensure the recipient is either the client or the freelancer
@@ -64,56 +64,40 @@ pub mod d_fiverr {
         );
     
         // Transfer funds to the specified recipient
-        let cpi_context = CpiContext::new(
-            ctx.accounts.token_program.to_account_info(),
-            anchor_lang::system_program::Transfer {
-                from: ctx.accounts.escrow.to_account_info(),
-                to: ctx.accounts.recipient.to_account_info(),
-            },
-        );
-        anchor_lang::system_program::transfer(cpi_context, escrow.amount)?;
+        let amount = escrow.amount;
+    
+        **escrow.to_account_info().try_borrow_mut_lamports()? -= amount;
+        **ctx.accounts.recipient.to_account_info().try_borrow_mut_lamports()? += amount;
     
         // Mark the escrow as completed
-        let escrow = &mut ctx.accounts.escrow;
         escrow.is_completed = true;
     
         Ok(())
     }
+    
 
     pub fn release_funds(ctx: Context<ReleaseFunds>) -> Result<()> {
-        // Check if the escrow is completed
         require!(ctx.accounts.escrow.is_completed, ErrorCode::EscrowNotCompleted);
     
-        // Get the amount to transfer
-        let amount   = ctx.accounts.escrow.amount;
+        let amount = ctx.accounts.escrow.amount;
     
-        // Transfer funds to the freelancer
-        let cpi_context = CpiContext::new(
-            ctx.accounts.token_program.to_account_info(),
-            anchor_lang::system_program::Transfer {
-                from: ctx.accounts.escrow.to_account_info(),
-                to: ctx.accounts.freelancer.to_account_info(),
-            },
-        );
-        anchor_lang::system_program::transfer(cpi_context, amount)?;
-    
-        // Optionally, we can mark the escrow as paid or close the account here , leaving for now
-        // ctx.accounts.escrow.is_paid = true;
+        **ctx.accounts.escrow.to_account_info().try_borrow_mut_lamports()? -= amount;
+        **ctx.accounts.freelancer.to_account_info().try_borrow_mut_lamports()? += amount;
     
         Ok(())
     }
+    
 }
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = client, space = 8 + 32 + 32 + 8 + 1 + 1 + 1 + 32)]
+    #[account(init, payer = client, space = 8 + 32 + 32 + 8 + 1 + 1 + 1 + 32 + 64)]
     pub escrow: Account<'info, Escrow>,
     #[account(mut)]
     pub client: Signer<'info>,
     /// CHECK: This is the owner of the program
     pub owner: AccountInfo<'info>,
     pub system_program: Program<'info, System>,
-    pub token_program: Program<'info, anchor_lang::system_program::System>,
 }
 
 #[derive(Accounts)]
@@ -125,23 +109,24 @@ pub struct MarkCompleted<'info> {
 
 #[derive(Accounts)]
 pub struct ResolveDispute<'info> {
-    #[account(mut)]
+    #[account(mut, has_one = owner)]
     pub escrow: Account<'info, Escrow>,
     pub owner: Signer<'info>,
     /// CHECK: This account is not read or written in this instruction, it's just used as the recipient for funds transfer
     #[account(mut)]
-    pub recipient: AccountInfo<'info>,
-    pub token_program: Program<'info, anchor_lang::system_program::System>,
+    pub recipient: SystemAccount<'info>,
+    pub system_program: Program<'info, System>,
 }
+
 #[derive(Accounts)]
 pub struct ReleaseFunds<'info> {
-    #[account(mut)]
+    #[account(mut, has_one = freelancer)]
     pub escrow: Account<'info, Escrow>,
-    /// CHECK: This account is not read in this instruction, it's just used as the recipient for funds transfer
     #[account(mut)]
-    pub freelancer: AccountInfo<'info>,
-    pub token_program: Program<'info, anchor_lang::system_program::System>,
+    pub freelancer: SystemAccount<'info>,
+    pub system_program: Program<'info, System>,
 }
+
 
 #[account]
 pub struct Escrow {

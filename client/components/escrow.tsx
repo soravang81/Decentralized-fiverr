@@ -3,8 +3,7 @@
 import React, { useState } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { toast } from "sonner";
-import { initializeEscrow } from '@/app/actions/escrow/escrow';
-import { TransactionInstruction, Transaction, PublicKey, Keypair, SystemProgram } from '@solana/web3.js';
+import { PublicKey, SystemProgram } from '@solana/web3.js';
 import idl from "../../target/idl/d_fiverr.json"
 import { Input } from './ui/input';
 import { Button } from './ui/button';
@@ -12,7 +11,7 @@ import { Label } from './ui/label';
 import { BN, Idl, Program, web3 } from '@project-serum/anchor';
 
 const OWNER_PUBLIC_KEY = new PublicKey("BMbQmugTyuU82vrMrFko4qap293wyK1iyk3toLuBys2D");
-const PROGRAM_ID = new PublicKey("6t7FU5ZA1A38w4tgAPVqR3bYx9CwoctqgPtQ7oFMJtn");
+const PROGRAM_ID = new PublicKey("GnrHaj1hB4BqKbiWiCWKA6BwkUaF2zmywsaLcGAtTtbj");
 const SOLANA_RPC_URL = "https://api.devnet.solana.com"
 
 const InitializeEscrow = () => {
@@ -50,9 +49,8 @@ const InitializeEscrow = () => {
       .accounts({
         escrow: escrowKeypair.publicKey,
         client: publicKey,
-        owner: OWNER_PUBLIC_KEY, // Make sure this is defined
+        owner: OWNER_PUBLIC_KEY, 
         systemProgram: SystemProgram.programId,
-        tokenProgram: SystemProgram.programId,
       })
       .transaction();
 

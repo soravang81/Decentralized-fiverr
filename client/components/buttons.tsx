@@ -5,29 +5,32 @@ import { Session } from "next-auth";
 import { Button } from "./ui/button";
 import { signIn, signOut } from "next-auth/react";
 import { currentRole } from "@/lib/recoil/atoms";
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import '@solana/wallet-adapter-react-ui/styles.css';
 import styled from 'styled-components';
-
+import { useRouter } from "next/navigation";
+import { UserRole } from "@prisma/client";
 
 export const RoleToggleButton = ({ session }: { session: Session }) => {
-    const [role, setCurrentRole] = useRecoilState(currentRole);
-    // const role = await getLastRole(session.user.id)
-    const roleText = role === "BUYER" ? "Switch to Seller" : "Switch to Buyer";
-  
-    const handleClick = async () => {
-      const updatedRole = role === "BUYER" ? "SELLER" : "BUYER";
-      setCurrentRole(updatedRole);
-      await updateLastRole({ id: session.user.id, role: updatedRole });
-    };
-  
-    return (
-      <Button variant={"ghost"} onClick={handleClick}>
-        {roleText}
-      </Button>
-    );
-  };
+  const [role, setRole] = useRecoilState<UserRole>(currentRole);
+  const router = useRouter();
+
+  const handleClick = useCallback(async () => {
+    const updatedRole = role === "BUYER" ? "SELLER" : "BUYER";
+    
+    await updateLastRole({ id: session.user.id, role: updatedRole });
+    setRole(updatedRole);
+
+    router.replace(updatedRole === "SELLER" ? '/seller_dashboard' : '/');
+  }, [role, setRole, session.user.id, router]);
+
+  return (
+    <Button variant="ghost" onClick={handleClick}>
+      Switch to {role === "BUYER" ? "Seller" : "Buyer"}
+    </Button>
+  );
+};
 
 export const LoginButton = ({session}:{session : Session | null}) => {
     const statusText = session?.user ? "Logout" : "Login";

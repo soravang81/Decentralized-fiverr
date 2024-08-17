@@ -1,66 +1,133 @@
 import * as anchor from '@project-serum/anchor';
-import { Program, Wallet, AnchorProvider } from '@project-serum/anchor';
-import { Connection, Keypair, PublicKey } from '@solana/web3.js';
-import idl from '../target/idl/d_fiverr.json'; // Make sure this path is correct
-import * as fs from 'fs';
+import { Program } from '@project-serum/anchor';
+import { DFiverr } from '../target/types/d_fiverr';
+import { PublicKey, Keypair, SystemProgram } from '@solana/web3.js';
+import { expect } from 'chai';
 
+describe('d_fiverr', () => {
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
 
-async function main() {
-    const connection = new Connection("https://api.devnet.solana.com") 
-    const programId = new PublicKey("CrRa5MvEM4iBp4qkTiywNMYdRWCywzHcBGWcwHs32UuG")
-    
-    const programAccounts = await connection.getProgramAccounts(programId);  // Your test code here
-    console.log("Program accounts:", programAccounts)
-    const keypairFile = fs.readFileSync('/home/sourav/.config/solana/id.json', 'utf-8');
-    const keypairData = JSON.parse(keypairFile);
-    const keypair = Keypair.fromSecretKey(Uint8Array.from(keypairData));
-    
-    // Create the wallet instance
-    const wallet = new Wallet(keypair);
-    
-    // Create the provider
-    const provider = new AnchorProvider(connection, wallet, { commitment: "confirmed" });
-    
-    // Set the provider as the default one
-    anchor.setProvider(provider);
-    
-    // Initialize the program
-    const program = new Program(idl as any, "sKiCxvD7pyGxAjT6wPxAssEPqTSuD7FLyXFDxu4MEF1" as anchor.Address, provider);
-  
-  // Example: derive PDA for escrow account
-  const [escrowAccount] = await PublicKey.findProgramAddress(
-    [Buffer.from('escrow'), provider.wallet.publicKey.toBuffer()],
-    program.programId
-  );
+  const program = anchor.workspace.DFiverr as Program<DFiverr>;
 
-  console.log("Escrow Account PDA:", escrowAccount.toString());
-  
-    const clientPublicKey = provider.wallet.publicKey;
-    const freelancerPublicKey = new PublicKey('B17g8BzsXN8qNsimyJdzCivJfRSZiBEPADDwtMuj1tsS');
-    const amount = new anchor.BN(1000000);
-  
-    console.log('Client PublicKey:', clientPublicKey.toBase58());
-    console.log('Freelancer PublicKey:', freelancerPublicKey.toBase58());
-    console.log('Escrow Account:', escrowAccount.toBase58());
-    console.log('Amount:', amount.toString());
-  
-    try {
-        await program.methods
-        .initialize(clientPublicKey, freelancerPublicKey, amount)
-        .accounts({
-          escrow: escrowAccount,
-          client: clientPublicKey,
-          owner: provider.wallet.publicKey,
-          systemProgram: anchor.web3.SystemProgram.programId,
-          tokenProgram: anchor.web3.SystemProgram.programId,
-        })
-        .rpc();
-      console.log('Escrow initialized!');
-    } catch (error) {
-      console.error('Error initializing escrow:', error);
-    }
-  }
+  let escrowAccount: Keypair;
+  let clientKeypair: Keypair;
+  let freelancerKeypair: Keypair;
+  let ownerKeypair: Keypair;
 
-main().catch(err => {
-  console.error(err);
+  const escrowAmount = new anchor.BN(1_000_000_000); // 1 SOL
+
+  before(async () => {
+    escrowAccount = Keypair.generate();
+    clientKeypair = Keypair.generate();
+    freelancerKeypair = Keypair.generate();
+    ownerKeypair = Keypair.generate();
+
+    // Airdrop SOL to client for paying escrow
+    await provider.connection.requestAirdrop(clientKeypair.publicKey, 2_000_000_000);
+    await provider.connection.confirmTransaction(await provider.connection.requestAirdrop(clientKeypair.publicKey, 2_000_000_000));
+  });
+
+  it('Initializes the escrow', async () => {
+    await program.methods
+      .initialize(clientKeypair.publicKey, freelancerKeypair.publicKey, escrowAmount)
+      .accounts({
+        escrow: escrowAccount.publicKey,
+        client: clientKeypair.publicKey,
+        owner: ownerKeypair.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .signers([clientKeypair, escrowAccount])
+      .rpc();
+
+    const escrowState = await program.account.escrow.fetch(escrowAccount.publicKey);
+    expect(escrowState.client.toString()).to.equal(clientKeypair.publicKey.toString());
+    expect(escrowState.freelancer.toString()).to.equal(freelancerKeypair.publicKey.toString());
+    expect(escrowState.amount.toNumber()).to.equal(escrowAmount.toNumber());
+    expect(escrowState.isCompleted).to.be.false;
+    expect(escrowState.clientAgreed).to.be.false;
+    expect(escrowState.freelancerAgreed).to.be.false;
+    expect(escrowState.owner.toString()).to.equal(ownerKeypair.publicKey.toString());
+  });
+
+  it('Marks the escrow as completed by client and freelancer', async () => {
+    await program.methods
+      .markCompleted('client')
+      .accounts({
+        escrow: escrowAccount.publicKey,
+        signer: clientKeypair.publicKey,
+      })
+      .signers([clientKeypair])
+      .rpc();
+
+    await program.methods
+      .markCompleted('freelancer')
+      .accounts({
+        escrow: escrowAccount.publicKey,
+        signer: freelancerKeypair.publicKey,
+      })
+      .signers([freelancerKeypair])
+      .rpc();
+
+    const escrowState = await program.account.escrow.fetch(escrowAccount.publicKey);
+    expect(escrowState.isCompleted).to.be.true;
+    expect(escrowState.clientAgreed).to.be.true;
+    expect(escrowState.freelancerAgreed).to.be.true;
+  });
+
+  it('Releases funds to the freelancer', async () => {
+    const freelancerBalanceBefore = await provider.connection.getBalance(freelancerKeypair.publicKey);
+  
+    await program.methods
+      .releaseFunds()
+      .accounts({
+        escrow: escrowAccount.publicKey,
+        freelancer: freelancerKeypair.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .rpc();
+  
+    const freelancerBalanceAfter = await provider.connection.getBalance(freelancerKeypair.publicKey);
+    expect(freelancerBalanceAfter).to.be.greaterThan(freelancerBalanceBefore);
+  });
+  
+  it('Resolves a dispute', async () => {
+    // Create a new escrow for this test
+    const disputeEscrowAccount = Keypair.generate();
+    
+    // Airdrop more SOL to the client
+    await provider.connection.requestAirdrop(clientKeypair.publicKey, 2_000_000_000);
+    await provider.connection.confirmTransaction(await provider.connection.requestAirdrop(clientKeypair.publicKey, 2_000_000_000));
+  
+    // Use a smaller amount for this test
+    const disputeEscrowAmount = new anchor.BN(100_000_000); // 0.1 SOL
+  
+    await program.methods
+      .initialize(clientKeypair.publicKey, freelancerKeypair.publicKey, disputeEscrowAmount)
+      .accounts({
+        escrow: disputeEscrowAccount.publicKey,
+        client: clientKeypair.publicKey,
+        owner: ownerKeypair.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .signers([clientKeypair, disputeEscrowAccount])
+      .rpc();
+  
+    const clientBalanceBefore = await provider.connection.getBalance(clientKeypair.publicKey);
+  
+    await program.methods
+      .resolveDispute(clientKeypair.publicKey)
+      .accounts({
+        escrow: disputeEscrowAccount.publicKey,
+        owner: ownerKeypair.publicKey,
+        recipient: clientKeypair.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .signers([ownerKeypair])
+      .rpc();
+  
+    const clientBalanceAfter = await provider.connection.getBalance(clientKeypair.publicKey);
+    expect(clientBalanceAfter).to.be.greaterThan(clientBalanceBefore);
+  });
+  
 });

@@ -29,7 +29,7 @@ function Providers({ children}:{children : ReactNode}) {
     return (
         <SessionProvider>
           <RecoilRoot>
-            <Toaster expand position="top-right"/>
+            <Toaster expand position="top-right" offset={3} duration={3000}/>
             <ConnectionProvider endpoint={endpoint}>
               <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>

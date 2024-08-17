@@ -2,13 +2,13 @@
 import { Gig } from '@prisma/client';
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { deleteGig } from '@/app/actions/seller/gigs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { CreateGig } from './createGig';
 
-interface GigListProps {
-  gigs: Gig[]
-}
-
-const GigList: React.FC<GigListProps> = ({ gigs }) => {
+export const GigList = ({ gigs }:{gigs : Gig[]}) => {
   const [selectedGigs, setSelectedGigs] = useState<string[]>([]);
+  const [editingGig, setEditingGig] = useState<Gig | null>(null);
 
   const handleCheckboxChange = (gigId: string) => {
     setSelectedGigs(prev => 
@@ -18,9 +18,10 @@ const GigList: React.FC<GigListProps> = ({ gigs }) => {
     );
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     console.log('Delete gigs', selectedGigs);
-    // Implement delete functionality here
+    const res = await deleteGig(selectedGigs)
+    if (res) window.location.reload();
     setSelectedGigs([]);
   };
 
@@ -40,34 +41,43 @@ const GigList: React.FC<GigListProps> = ({ gigs }) => {
           Delete Selected ({selectedGigs.length})
         </button>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 overflow-y-auto p-4">
         {gigs.map((gig) => (
-          <div key={gig.id} className="bg-white rounded-lg shadow-md overflow-hidden flex">
+          <div key={gig.id} className="bg-white rounded-lg shadow-md border overflow-hidden flex">
             
-            <div className="p-4 flex-grow flex items-center justify-between">
-                <div className='flex items-center'>
+            <div className="px-6 flex-grow flex items-center justify-between">
+                <div className='flex items-center p-4 gap-6'>
                     <input
                         type="checkbox"
                         checked={selectedGigs.includes(gig.id)}
                         onChange={() => handleCheckboxChange(gig.id)}
                         className="form-checkbox h-5 w-5 text-blue-600 mr-4"
                     />
-                    <div className="relative w-28 h-24 flex-shrink-0">
-                        <Image
-                            src={gig.picture || ""} // Replace with actual image URL or use a placeholder
+                    <div className="relative w-24 h-20 flex-shrink-0 flex items-center justify-center">
+                        <img
+                            src={gig.picture || ""} 
                             alt={gig.title}
-                            layout="fill"
-                            objectFit="cover"
+                            className='w-[80%] h-[80%] rounded-md border'
                         />
                     </div>
                     <h3 className="font-bold text-lg">{gig.title}</h3>
                 </div>
-                <button 
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                  onClick={() => {/* Implement edit functionality */}}
-                >
-                  Edit
-                </button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button 
+                      className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                      onClick={() => setEditingGig(gig)}
+                    >
+                      Edit
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="max-h-[85vh] overflow-y-scroll">
+                    <DialogHeader>
+                      <DialogTitle>Edit Gig</DialogTitle>
+                    </DialogHeader>
+                    <CreateGig gig={editingGig as Gig} />
+                  </DialogContent>
+                </Dialog>
             </div>
           </div>
         ))}
@@ -75,5 +85,3 @@ const GigList: React.FC<GigListProps> = ({ gigs }) => {
     </div>
   );
 };
-
-export default GigList;

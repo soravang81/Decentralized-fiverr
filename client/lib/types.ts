@@ -57,18 +57,16 @@ export enum TransactionPurpose {
 }
 
 export interface PricingPackageInput {
-  gigId: string;
   packageType: PackageType;
   name: string;
   description: string;
-  price: number;
-  deliveryTime: number;
+  price: string;
+  deliveryTime: string;
   // revisions: number;
   features: string[];
 }
 
 export interface CreateGigInput {
-  sellerId: string;
   title: string;
   description: string;
   category: Category;

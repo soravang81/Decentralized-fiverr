@@ -4,13 +4,13 @@ skip-lint = false
 seeds = false
 
 [programs.localnet]
-d_fiverr = "6t7FU5ZA1A38w4tgAPVqR3bYx9CwoctqgPtQ7oFMJtn"
+d_fiverr = "GnrHaj1hB4BqKbiWiCWKA6BwkUaF2zmywsaLcGAtTtbj"
 
 [registry]
 url = "https://api.apr.dev"
 
 [programs.devnet]
-d_fiverr = "6t7FU5ZA1A38w4tgAPVqR3bYx9CwoctqgPtQ7oFMJtn"
+d_fiverr = "GnrHaj1hB4BqKbiWiCWKA6BwkUaF2zmywsaLcGAtTtbj"
 # programdata = "CrRa5MvEM4iBp4qkTiywNMYdRWCywzHcBGWcwHs32UuG"
 
 [provider]

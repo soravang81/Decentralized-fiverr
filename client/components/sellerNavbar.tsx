@@ -1,7 +1,7 @@
 "use client"
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { Button } from './ui/button';
+import { usePathname } from 'next/navigation';
 
 export const SellerNavbar = ({sellerId}: {sellerId : string}) => {
     const pathname = usePathname();
@@ -22,18 +22,16 @@ export const SellerNavbar = ({sellerId}: {sellerId : string}) => {
         }
     ];
 
-    return (
-        <nav className="bg-white ">
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                {navItems.map((item) => (
-                    <Link
-                        key={item.name}
-                        href={item.path}
-                    >
-                        <Button variant={"ghost"}>{item.name}</Button>
-                    </Link>
-                ))}
-            </div>
-        </nav>
-    );
+    return pathname.startsWith("/seller_dashboard") ? <nav className="bg-white ">
+        <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+            {navItems.map((item) => (
+                <Link
+                    key={item.name}
+                    href={item.path}
+                >
+                    <Button variant={"ghost"}>{item.name}</Button>
+                </Link>
+            ))}
+        </div>
+    </nav> : null
 };

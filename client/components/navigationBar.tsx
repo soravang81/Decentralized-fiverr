@@ -8,13 +8,13 @@ export const NavigationBar = () => {
         <BreadcrumbList>
             <BreadcrumbItem>
             <BreadcrumbLink asChild>
-                <Link href="/">Home</Link>
+                <Link href="/seller_dashboard/gigs/create-gig">Gig</Link>
             </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
             <BreadcrumbLink asChild>
-                <Link href="/components">Components</Link>
+                <Link href="/seller_dashboard/gigs/create-pricing">Pricing</Link>
             </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
