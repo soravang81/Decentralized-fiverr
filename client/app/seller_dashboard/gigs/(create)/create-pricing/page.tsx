@@ -1,4 +1,4 @@
-import { CreatePricing } from "@/components/ui/createPricing";
+import { CreatePricing } from "@/components/createPricing";
 
 export default function CreatePricingPage() {
   return <CreatePricing />;

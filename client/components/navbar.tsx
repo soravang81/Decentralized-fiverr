@@ -14,7 +14,7 @@ export default function Navbar ({session}:{session:Session | null}) {
                 <Link href={"/"}><span className="font-bold">DFiverr</span></Link>
                 <SellerNavbar sellerId={""}/>
             </section>
-            <section className="flex justify-between items-center">
+            <section className="flex justify-between gap-4 items-center">
                 {session && <>
                     <RoleToggleButton session={session}/>
                     <CustomWalletMultiButton/> 

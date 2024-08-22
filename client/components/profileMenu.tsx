@@ -21,6 +21,7 @@ export function ProfileMenu({session, }:{session : Session }) {
   const [selectedAction, setSelectedAction] = useState("");
   const img = useUserImage();
 
+  console.log(img)
   const handleDropdownClose = () => {
     setDropdownOpen(false);
   };
@@ -35,7 +36,7 @@ export function ProfileMenu({session, }:{session : Session }) {
     <div className="flex items-center">
       <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <DropdownMenuTrigger asChild>
-          <Avatar>
+          <Avatar className="border">
             {img && <AvatarImage src={img} alt="user" onClick={() => setDropdownOpen(!dropdownOpen)}/>}
           </Avatar>
         </DropdownMenuTrigger>

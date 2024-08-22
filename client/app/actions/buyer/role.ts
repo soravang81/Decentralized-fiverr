@@ -27,7 +27,7 @@ export const getLastRole = async (id:string) =>{
     return res?.lastRole ? res.lastRole : false
 }
 export const updateLastRole = async ({id,role}:{id:string , role : UserRole}) =>{
-    // console.log("updating role" + role)
+    console.log("updating role" + role)
     const res = await prisma.user.update({
         where : {
             id

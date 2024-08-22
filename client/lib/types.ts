@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
-import { Category, Niche, SubNiche } from "./niches";
-import { EscrowStatus, EscrowUsers } from "@prisma/client";
+// import { Category, Niche, SubNiche } from "./niches";
+import { EscrowStatus, EscrowUsers, GigStatus, SellerProfile ,Category, Niche, SubNiche, PricingPackage } from "@prisma/client";
 
 // Enums
 export enum UserRole {
@@ -16,13 +16,13 @@ export type TOrderStatus = {
   DISPUTED : 'DISPUTED'
 }
 export interface CreateEscrowParams {
-  // Fields from your Escrow model
-  orderId: string;
-  address: PublicKey;
-  client: PublicKey;
-  receiver: PublicKey;
+  // orderId : string
+  txHash : string
+  address: string;
+  client: string;
+  receiver: string;
   amount: number;
-  status: EscrowStatus;
+  status?: EscrowStatus;
   sentTo?: EscrowUsers;
   transactionId?: string;
 }
@@ -79,9 +79,7 @@ export interface CreateGigInput {
 
 export interface CreateOrderInput {
   packageId: string;
-  packageType: PackageType;
   gigId: string;
-  buyerId: string;
   sellerId: string;
   amount: number;
   deadline: Date;
@@ -124,9 +122,23 @@ export interface CreateUserInput {
   provider: string; // Assuming Provider is a string in your actual implementation
 }
 
+export interface IGetGigs {
+  id: string,
+  title: string,
+  sellerId: string,
+  description: string,
+  status: GigStatus,
+  picture: string | null,
+  category: Category,
+  niche: Niche,
+  subNiche: SubNiche,
+  seller : SellerProfile,
+  pricing : PricingPackage[]
+  tags: string[],
+}
+
 export interface CreatePricingPackageInput {
-    gigId: string;
-    packageType: PackageType;
+    // packageType: PackageType;
     name: string;
     description: string;
     price: number;

@@ -3,12 +3,14 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import Navbar from "@/components/navbar";
-import { RoleBasedRedirectWrapper } from "@/components/rolebasedRedirect";
+// import { RoleBasedRedirectWrapper } from "@/components/rolebasedRedirect";
 import { getServerSession, Session } from "next-auth";
 import { authConfig } from "@/lib/auth";
 import { getLastRole } from "./actions/buyer/role";
 import { UserRole } from "@prisma/client";
-import { RoleBasedRedirect } from "@/components/rolebased";
+import { Suspense } from "react";
+import Loading from "./loading";
+// import { RoleBasedRedirect } from "@/components/rolebased";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,13 +29,15 @@ export default async function RootLayout({
   const role = session && await getLastRole(session?.user.id)
   return (
     <html lang="en">
+    <Suspense fallback={<Loading/>}>
       <body className={inter.className}>
         <Providers>
           <Navbar session={session}/>
-          <RoleBasedRedirect session={session} lastRole={role as UserRole}/>
+          {/* <RoleBasedRedirect session={session} lastRole={role as UserRole}/> */}
           {children}
         </Providers>
       </body>
+    </Suspense >
     </html>
   );
 }

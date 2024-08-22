@@ -25,6 +25,7 @@ export const imageSelector = selector({
 
 export function useUserImage() {
   const image = useRecoilValue(imageState);
+  const role = useRecoilValue(currentRole);
   
   const setImage = useRecoilCallback(({ set }) => async () => {
     const userImage = await getImage();
@@ -33,7 +34,7 @@ export function useUserImage() {
 
   useEffect(() => {
     setImage();
-  }, [setImage,currentRole]);
+  }, [setImage,role]);
 
   return image;
 }

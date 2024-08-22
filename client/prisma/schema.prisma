@@ -54,17 +54,17 @@ model Gig {
   category                Category        
   niche                   Niche       
   subNiche                SubNiche      
-  pricing                 PricingPackage[]      
   tags                    String[]              
   createdAt               DateTime              @default(now())
   updatedAt               DateTime              @updatedAt
+  pricing                 PricingPackage[]      
   seller                  SellerProfile         @relation(fields: [sellerId], references: [id])
   orders                  Order[]       
 }         
 model PricingPackage {          
   id                      String                @id @default(uuid())
   gigId                   String          
-  packageType             PackageType         
+  // packageType             PackageType         
   name                    String          
   description             String          
   price                   Float         
@@ -78,7 +78,6 @@ model PricingPackage {
 model Order {    
   id                      String                @id @default(uuid())
   packageId               String        
-  packageType             PackageType 
   gigId                   String        
   buyerId                 String        
   sellerId                String        
@@ -99,7 +98,6 @@ model Order {
 model Escrow {
   id                      String                @id @default(uuid())
   orderId                 String                @unique
-  order                   Order                 @relation(fields: [orderId], references: [id])
   address                 String                @unique
   client                  String                
   receiver                String
@@ -110,6 +108,7 @@ model Escrow {
   updatedAt               DateTime              @updatedAt
   resolvedAt              DateTime?
   transactionId           String?
+  order                   Order                 @relation(fields: [orderId], references: [id])
 }
 
 enum EscrowStatus {

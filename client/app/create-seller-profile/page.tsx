@@ -1,6 +1,5 @@
 import { Container } from "@/components/container"
-import { NavigationBar } from "@/components/navigationBar"
-import PersonalInfo from "@/components/sellerForm"
+import {PersonalInfo} from "@/components/sellerForm"
 import { getServerSession } from "next-auth"
 import { getLastRole } from "../actions/buyer/role"
 import { authConfig } from "@/lib/auth"

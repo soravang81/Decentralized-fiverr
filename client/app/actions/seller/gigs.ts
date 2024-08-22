@@ -1,11 +1,12 @@
 "use server"
-import { CreateGigInput, PricingPackageInput } from "@/lib/types"
+import { CreateGigInput, CreatePricingPackageInput, IGetGigs, PricingPackageInput } from "@/lib/types"
 import prisma from "../../db/db"
 import { getServerSession } from "next-auth"
 import { authConfig } from "@/lib/auth"
 import { Gig } from "@prisma/client"
+import { IGigExtended } from "@/app/gig/[id]/page"
 
-export const createGig = async ({gig, pkg}: {gig: Omit<CreateGigInput,'sellerId'>, pkg: PricingPackageInput[]}) => {
+export const createGig = async ({gig, pkg}: {gig: Omit<CreateGigInput,'sellerId'>, pkg: CreatePricingPackageInput[]}) => {
     const session = await getServerSession(authConfig);
     if (!session || !session.user.id) {
         throw new Error("Unauthorized");
@@ -38,11 +39,11 @@ export const createGig = async ({gig, pkg}: {gig: Omit<CreateGigInput,'sellerId'
                 return prisma.pricingPackage.create({
                     data: {
                         gigId: newGig.id,
-                        packageType: pkg.packageType,
+                        // packageType: pkg.packageType,
                         name: pkg.name,
                         description: pkg.description,
-                        price: parseInt(pkg.price),
-                        deliveryTime: parseInt(pkg.deliveryTime),
+                        price: pkg.price,
+                        deliveryTime: pkg.deliveryTime,
                         features: pkg.features
                     }
                 });
@@ -55,7 +56,39 @@ export const createGig = async ({gig, pkg}: {gig: Omit<CreateGigInput,'sellerId'
         throw e;
     }
 }
-export const getGigs = async() => {
+
+export const getGig = async (id: string): Promise<IGigExtended | null> => {
+    try {
+        const gig = await prisma.gig.findUnique({ 
+            where: { id } ,
+            select: {
+                id: true,
+                title: true,
+                sellerId: true,
+                description: true,
+                status: true,
+                picture: true,
+                category: true,
+                niche: true,
+                subNiche: true,
+                seller : true,
+                pricing : true,
+                createdAt : true,
+                updatedAt : true,
+                tags: true,
+            },
+        });
+        if (!gig) {
+            return null;
+        }
+        return gig;
+    } catch (e) {
+        console.error("Error fetching gig:", e);
+        throw e;
+    }
+}
+
+export const getGigs = async (): Promise<{ sellerId: string; gigs: IGetGigs[] } | false> => {
     const session = await getServerSession(authConfig);
     if (!session || !session.user.id) {
         throw new Error("Unauthorized");
@@ -63,7 +96,7 @@ export const getGigs = async() => {
     try {
         const seller = await prisma.sellerProfile.findUnique({
             where: { userId: session.user.id },
-            select: { id: true }
+            select: { id: true },
         });
 
         if (!seller) {
@@ -71,35 +104,35 @@ export const getGigs = async() => {
         }
         const gigs = await prisma.gig.findMany({
             where: {
-                AND : {
-                    sellerId : seller.id,
-                    status : "ACTIVE"
-                }
+                AND: {
+                    sellerId: seller.id,
+                    status: "ACTIVE",
+                },
             },
-            select : {
-                id : true,
-                title : true,
-                sellerId : true,
-                description : true,
-                status : true,
-                picture : true,
-                category : true,
-                niche : true,
-                subNiche : true,
-                createdAt : true,
-                updatedAt : true,
-                tags : true,
-            }
-        })
+            select: {
+                id: true,
+                title: true,
+                sellerId: true,
+                description: true,
+                status: true,
+                picture: true,
+                category: true,
+                niche: true,
+                subNiche: true,
+                seller : true,
+                pricing : true,
+                tags: true,
+            },
+        });
         return {
-            sellerId : seller.id,
-            gigs : gigs
-        }
+            sellerId: seller.id,
+            gigs,
+        };
     } catch (e) {
-        console.error(e)
-        return false
+        console.error(e);
+        return false;
     }
-}
+};
 export const deleteGig = async (gigIds : string[]) =>{
     try {
         await prisma.gig.updateMany({

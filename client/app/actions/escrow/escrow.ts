@@ -2,7 +2,7 @@
 'use server'
 
 import { Connection, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
-import { AnchorProvider, Program, web3, BN, Idl } from '@project-serum/anchor';
+import { Program, web3, BN, Idl } from '@project-serum/anchor';
 import idl from "../../../../target/idl/d_fiverr.json"
 
 const OWNER_PUBLIC_KEY = new PublicKey("BMbQmugTyuU82vrMrFko4qap293wyK1iyk3toLuBys2D");

@@ -14,13 +14,12 @@ const reducedOrderStatus: ordersToShow = {
     DELIVERED: "DELIVERED",
     CANCELLED: "CANCELLED",
 };
-
 export const Orders = ({ orders }: { orders: Order[] }) => {
     const [selectedStatus, setSelectedStatus] = useState<OrderStatusKeys>("PROCESSING");
 
-    const handleStatusChange = (value: string) => {
-        if (Object.keys(reducedOrderStatus).includes(value)) {
-            setSelectedStatus(value as OrderStatusKeys);
+    const handleStatusChange = (newStatus: string) => {
+        if (Object.keys(reducedOrderStatus).includes(newStatus)) {
+            setSelectedStatus(newStatus as OrderStatusKeys);
         }
     };
 
@@ -31,7 +30,9 @@ export const Orders = ({ orders }: { orders: Order[] }) => {
     return (
         <Card className="p-4">
             <CardContent className="flex justify-between">
-                <h3>{activeOrders.length} (${totalOrdersAmount})</h3>
+                <h3>
+                    {activeOrders.length} ({totalOrdersAmount})
+                </h3>
                 <Select onValueChange={handleStatusChange}>
                     <SelectTrigger>
                         <SelectValue placeholder={selectedStatus} />

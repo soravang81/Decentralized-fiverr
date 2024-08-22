@@ -6,14 +6,13 @@ import { toast } from "sonner";
 import { Category, Niche, nicheMappings, SubNiche, CategoryReadable, NicheReadable, SubNicheReadable } from "@/lib/niches";
 import { useState, useRef, useEffect } from 'react';
 import { uploadImage } from '@/lib/firebase/image';
-import { Gig } from '@prisma/client';
 import { useRecoilState } from 'recoil';
 import { gigform } from '@/lib/recoil/atoms';
-import Link from 'next/link';
-import { Qahiri } from 'next/font/google';
 import { useRouter } from 'next/navigation';
+import { IGetGigs } from '@/lib/types';
+import { Button } from './ui/button';
 
-export const CreateGig = ({ gig }: { gig?: Gig }) => {
+export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
   const [formData, setFormData] = useRecoilState(gigform)
   console.log(gig)
 
@@ -104,13 +103,12 @@ export const CreateGig = ({ gig }: { gig?: Gig }) => {
         picture: imageUrl,
       };
       if (gig) {
-        // Update existing gig
         const res = await editGig({ gig: gigData, gigId: gig.id });
         res && toast.success('Gig updated successfully!');
         router.refresh()
       }
       else {
-        router.push("/seller_dashboard/gigs/create-pricing");
+        router.replace("/seller_dashboard/gigs/create-pricing");
       }
     } catch (error) {
       console.error("Error submitting gig:", error);
@@ -249,12 +247,12 @@ export const CreateGig = ({ gig }: { gig?: Gig }) => {
             placeholder="Separate tags with commas"
           />
         </div>
-        <button
+        <Button
           type={"submit"}
-          className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors"
+          className="w-full px-4 py-2 text-white "
         >
           {gig ? "Update" : "Continue"}
-        </button>
+        </Button>
       </form>
     </div>
   );
