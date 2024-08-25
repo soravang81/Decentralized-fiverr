@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { toast } from "sonner";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
-import idl from "../../target/idl/d_fiverr.json"
+import idl from "@/lib/idl.json"
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";

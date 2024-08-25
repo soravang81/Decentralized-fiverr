@@ -7,8 +7,7 @@ import { useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { Orders } from "@/lib/recoil/atoms";
 import { Idl, Program, web3 } from "@project-serum/anchor";
-import {IDL , DFiverr} from "../../target/types/d_fiverr"
-import idl from "../../target/idl/d_fiverr.json"
+import idl from "@/lib/idl.json"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Keypair, PublicKey, sendAndConfirmRawTransaction, sendAndConfirmTransaction, SystemProgram, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
 import { getEscrowAddress } from "@/app/actions/escrow/escrow";
