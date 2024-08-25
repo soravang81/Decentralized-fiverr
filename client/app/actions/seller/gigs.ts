@@ -60,7 +60,9 @@ export const createGig = async ({gig, pkg}: {gig: Omit<CreateGigInput,'sellerId'
 export const getGig = async (id: string): Promise<IGigExtended | null> => {
     try {
         const gig = await prisma.gig.findUnique({ 
-            where: { id } ,
+            where: {
+                id
+            },
             select: {
                 id: true,
                 title: true,
@@ -88,24 +90,20 @@ export const getGig = async (id: string): Promise<IGigExtended | null> => {
     }
 }
 
-export const getGigs = async (): Promise<{ sellerId: string; gigs: IGetGigs[] } | false> => {
+export const getGigs = async (id:string): Promise<{gigs: IGetGigs[] } | false> => {
     const session = await getServerSession(authConfig);
     if (!session || !session.user.id) {
         throw new Error("Unauthorized");
     }
     try {
-        const seller = await prisma.sellerProfile.findUnique({
-            where: { userId: session.user.id },
-            select: { id: true },
-        });
-
-        if (!seller) {
-            throw new Error("Seller profile not found");
-        }
         const gigs = await prisma.gig.findMany({
             where: {
                 AND: {
-                    sellerId: seller.id,
+                    seller : {
+                        userId : {
+                            not : id
+                        }
+                    },
                     status: "ACTIVE",
                 },
             },
@@ -124,10 +122,43 @@ export const getGigs = async (): Promise<{ sellerId: string; gigs: IGetGigs[] } 
                 tags: true,
             },
         });
-        return {
-            sellerId: seller.id,
-            gigs,
-        };
+        return {gigs}
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+};
+export const getSellerGigs = async (id:string): Promise<{gigs: IGetGigs[] } | false> => {
+    const session = await getServerSession(authConfig);
+    if (!session || !session.user.id) {
+        throw new Error("Unauthorized");
+    }
+    try {
+        const gigs = await prisma.gig.findMany({
+            where: {
+                AND: {
+                    seller : {
+                        userId : id
+                    },
+                    status: "ACTIVE",
+                },
+            },
+            select: {
+                id: true,
+                title: true,
+                sellerId: true,
+                description: true,
+                status: true,
+                picture: true,
+                category: true,
+                niche: true,
+                subNiche: true,
+                seller : true,
+                pricing : true,
+                tags: true,
+            },
+        });
+        return {gigs}
     } catch (e) {
         console.error(e);
         return false;

@@ -5,14 +5,17 @@ const CustomWalletMultiButton = dynamic(() => import('@/components/buttons'),{ s
 import { Session } from "next-auth";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { SellerNavbar } from "./sellerNavbar";
+import { BuyerNavbar, SellerNavbar } from "./roleBasedNavbar";
 
-export default function Navbar ({session}:{session:Session | null}) {
+export const Navbar = ({session}:{session:Session | null}) => {
     return (
         <div className="w-screen border shadow-md text-3xl px-10 py-2 flex justify-between items-center">
             <section className="flex items-center">
                 <Link href={"/"}><span className="font-bold">DFiverr</span></Link>
-                <SellerNavbar sellerId={""}/>
+                <div className="flex gap-4 ml-10">
+                    <SellerNavbar/>
+                    <BuyerNavbar/>
+                </div>
             </section>
             <section className="flex justify-between gap-4 items-center">
                 {session && <>
@@ -23,5 +26,5 @@ export default function Navbar ({session}:{session:Session | null}) {
                 <LoginButton session={session}/>
             </section>  
         </div>
-)
+    )
 }

@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 // import { Category, Niche, SubNiche } from "./niches";
-import { EscrowStatus, EscrowUsers, GigStatus, SellerProfile ,Category, Niche, SubNiche, PricingPackage } from "@prisma/client";
+import { EscrowStatus, EscrowUsers, GigStatus, SellerProfile ,Category, Niche, SubNiche, PricingPackage, Gig, OrderStatus, PaymentStatus } from "@prisma/client";
 
 // Enums
 export enum UserRole {
@@ -14,6 +14,18 @@ export type TOrderStatus = {
   DELIVERED : 'DELIVERED',
   CANCELLED : 'CANCELLED',
   DISPUTED : 'DISPUTED'
+}
+export interface IGetOrders {
+  id : string,
+  amount : number,
+  createdAt : Date,
+  deadline : Date,
+  quantity : number,
+  status : OrderStatus,
+  package : PricingPackage
+  paymentStatus : PaymentStatus,
+  seller : SellerProfile
+  gig : Gig
 }
 export interface CreateEscrowParams {
   // orderId : string
@@ -36,7 +48,7 @@ export type TEscrowUsers = {
   CLIENT : "CLIENT", 
   RECEIVER : "RECEIVER"
 }
-export enum PaymentStatus {
+export enum readablePaymentStatus {
   PENDING = 'PENDING',
   HELD_IN_ESCROW = 'HELD_IN_ESCROW',
   RELEASED = 'RELEASED',
@@ -81,6 +93,7 @@ export interface CreateOrderInput {
   packageId: string;
   gigId: string;
   sellerId: string;
+  quantity : number,
   amount: number;
   deadline: Date;
   status?: TOrderStatus;
@@ -144,6 +157,14 @@ export interface CreatePricingPackageInput {
     price: number;
     deliveryTime: number;
     // revisions: number;
+    features: string[];
+  }
+export interface EditPricingPackageInput {
+    id: string,
+    name: string;
+    description: string;
+    price: number;
+    deliveryTime: number;
     features: string[];
   }
 export interface CreateSellerProfileInput {

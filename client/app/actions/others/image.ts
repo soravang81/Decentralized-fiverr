@@ -2,8 +2,8 @@
 
 import { authConfig } from "@/lib/auth";
 import { getServerSession } from "next-auth";
-import { getLastRole } from "./buyer/role";
-import { getSellerProfileImage } from "./seller/sellerProfile";
+import { getLastRole } from "../buyer/role";
+import { getSellerProfileImage } from "../seller/sellerProfile";
 import { UserRole } from "@prisma/client";
 
 export async function getImage() {

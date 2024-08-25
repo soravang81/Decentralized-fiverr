@@ -1,12 +1,18 @@
-import { getGigs } from "@/app/actions/seller/gigs";
+import { getGigs, getSellerGigs } from "@/app/actions/seller/gigs";
 import { CreateGig } from "@/components/createGig";
 import {GigList} from "@/components/sellerGigs";
 import { Button } from "@/components/ui/button";
+import { authConfig } from "@/lib/auth";
 import { PlusCircle } from "lucide-react";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 
 export default async function() {
-  const res = await getGigs()
+  const session = await getServerSession(authConfig)
+  if (!session) {
+    return null
+  }
+  const res = await getSellerGigs(session?.user.id)
 
   if(!res) return null;
   

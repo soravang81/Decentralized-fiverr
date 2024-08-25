@@ -8,7 +8,7 @@ import { getServerSession, Session } from 'next-auth';
 import { authConfig } from '../auth';
 import { useEffect } from 'react';
 import { getLastRole } from '@/app/actions/buyer/role';
-import { getImage } from '@/app/actions/image';
+import { getImage } from '@/app/actions/others/image';
   
 export const imageState = atom<string>({
   key: 'imageState',
@@ -37,4 +37,22 @@ export function useUserImage() {
   }, [setImage,role]);
 
   return image;
+}
+
+export function useRole() {
+  const role = useRecoilValue(currentRole);
+  const {data : session} = useSession()
+  
+  const setRole = useRecoilCallback(({ set }) => async () => {
+    if (!session) return;
+
+    const lastRole = await getLastRole(session?.user.id);
+    lastRole && set(currentRole, lastRole);
+  }, [session]);
+
+  useEffect(() => {
+    setRole();
+  }, [setRole]);
+  
+  return role;
 }

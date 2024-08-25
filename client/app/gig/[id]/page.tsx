@@ -27,26 +27,23 @@ export default async function GigPageContent({ params }: { params: { id: string 
     category,
     niche,
     subNiche,
-    status,
-    createdAt,
-    updatedAt,
 } = gigData;
 
   return (
-    <div className="container py-10 flex">
+    <div className="container py-10 flex lg:flex-row flex-col gap-10">
       <div className="w-full h-full pr-10 flex flex-col gap-10">
         <h1 className="text-3xl font-bold mb-4 ">{title}</h1>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 max-w-full text-wrap flex-wrap">
           <div className="">
           
             {picture && (
               <Image src={picture} alt={title} width={1000} height={100} className="rounded-lg aspect-video mb-4" />
             )}
 
-            <section className="mb-6">
+            <section className="mb-6 mt-10">
               <h2 className="text-2xl font-semibold mb-2">About This Gig</h2>
-              <p>{description}</p>
+              <p className="ml-3 text-wrap">{description}</p>
             </section>
 
             <section className="mb-6">
@@ -73,34 +70,42 @@ export default async function GigPageContent({ params }: { params: { id: string 
               </div>
             </section>
           </div>
-        <section className="mt-6">
+        <section className="mt-6 flex flex-col gap-2">
           <h2 className="text-2xl font-semibold mb-2">Additional Information</h2>
-          <p>Category: {category}</p>
-          <p>Niche: {niche}</p>
-          <p>Sub-Niche: {subNiche}</p>
+          <p className="ml-2">Category: {category}</p>
+          <p className="ml-2">Niche: {niche}</p>
+          <p className="ml-2">Sub-Niche: {subNiche}</p>
         </section>
       </div>
-      <Tabs defaultValue={pricing[0].name}>
-        <TabsList aria-label="Pricing packages">
-          {pricing.map((pkg, index) => (
-            <TabsTrigger key={index} value={pkg.name}>
-              {pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1)}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      <div className="flex flex-col gap-2">
+        <h2 className="text-2xl font-semibold mb-2">Pricings</h2>
+        <Tabs defaultValue={pricing[0].name} className="w-96 max-w-full h-fit border rounded-lg p-2 pb-0">
+          <TabsList className="w-full">
+            {pricing.map((pkg, index) => (
+              <TabsTrigger key={index} value={pkg.name} className="w-full">
+                {pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1)}
+              </TabsTrigger>
+            ))}
+          </TabsList>
 
-        {pricing.map((pkg, index) => (
-          <TabsContent key={index} value={pkg.name}>
-            <div className="border rounded-lg p-4 mb-4">
-              <h3 className="font-semibold">{pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1)}</h3>
-              <p>{pkg.description}</p>
-              <p className="font-bold mt-2">${pkg.price}</p>
-              <p>Delivery in {pkg.deliveryTime} days</p>
-              {pkg && seller.wallet && <BuyOrders pkg={pkg} sellerId={gigData.seller.id} walletAddress={seller.wallet}/>}
-            </div>
-          </TabsContent>
-        ))}
-      </Tabs>
+          {pricing.map((pkg, index) => (
+            <TabsContent key={index} value={pkg.name} className="">
+              <div className="border rounded-lg p-6 mb-4">
+                <h3 className="font-semibold text-2xl p-1">{pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1)}</h3>
+                <p className="p-1">{pkg.description}</p>
+                <p className="font-bold mt-2 text-xl p-1">${pkg.price}</p>
+                <p className="text-lg p-1">Delivery in {pkg.deliveryTime} days</p>
+                <div className="flex flex-col gap-2 ml-2">
+                  <ol className="p-1 mb-2">
+                    {pkg.features.map((feature, index) => <li className="font-semibold" key={index}><span>{index + 1}. </span>{feature}</li>)}
+                  </ol>
+                </div>
+                {pkg && seller.wallet && <BuyOrders pkg={pkg} sellerId={gigData.seller.id} walletAddress={seller.wallet}/>}
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
     </div>
   );
 }

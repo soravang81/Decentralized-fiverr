@@ -14,7 +14,7 @@ import { Button } from './ui/button';
 
 export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
   const [formData, setFormData] = useRecoilState(gigform)
-  console.log(gig)
+  // console.log(gig)
 
   const [category, setCategory] = useState<Category | null>(null)
   const [niche, setNiche] = useState<Niche | null>(null)
@@ -94,10 +94,7 @@ export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      let imageUrl = formData.picture;
-      if (imageFile) {
-        imageUrl = await uploadImage(imageFile);
-      }
+      const imageUrl = imageFile ? await uploadImage(imageFile) : formData.picture;
       const gigData = {
         ...formData,
         picture: imageUrl,

@@ -7,10 +7,9 @@ import { dummygig, dummypricing } from "@/lib/populate";
 
 export const BuyersHomepage = async ({ session }: { session: Session | null }) => {
   const { user } = session || {};
+  if(!user) return
   const welcomeMessage = `Welcome back, ${user?.name || ''}`;
-  const gigs = await getGigs()
-  
-  // createGig({gig : dummygig , pkg : [dummypricing]})
+  const gigs = await getGigs(user?.id)
 
   if(!gigs) return
 

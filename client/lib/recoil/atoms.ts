@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { UserRole } from "@prisma/client";
-import { CreateGigInput } from "../types";
+import { CreateGigInput, IGetOrders } from "../types";
 import { Category, Niche, SubNiche } from "../niches";
 
 export const currentRole = atom<UserRole>({
@@ -24,15 +24,19 @@ export const currentImage = atom<string>({
     key: "currentImage",
     default: ""
 })
+export const Orders = atom<IGetOrders[]>({
+    key: "Orders",
+    default: []
+})
 export const gigform = atom<Omit<CreateGigInput, "sellerId">>({
-    key: 'gigform', 
-    default: {
-      title: '',
-      description: '',
-      category: '' as Category,
-      niche: '' as Niche,
-      picture: "",
-      subNiche: "" as SubNiche,
-      tags: [],
-    },
-  });
+  key: 'gigform', 
+  default: {
+    title: '',
+    description: '',
+    category: '' as Category,
+    niche: '' as Niche,
+    picture: "",
+    subNiche: "" as SubNiche,
+    tags: [],
+  },
+});

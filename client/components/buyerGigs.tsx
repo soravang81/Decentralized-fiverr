@@ -12,7 +12,7 @@ export const BuyerGigs = ({gigs}:{gigs:IGetGigs[]}) => {
         <h1 className="text-4xl font-semibold">Explore Gigs</h1>
         <div className=" py-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-cols-fr items-start">
             {gigs.map((gig, index) => (
-                <Card key={gig.id} className="w-full p-2">
+                <Card key={gig.id} className="w-full p-2 hover:scale-105 transition-transform ease-in-out">
                     <CardContent className="w-full flex flex-col gap-2 p-1">
                         <img src={gig.picture || ""} alt={"img"} className="w-full aspect-video object-cover border rounded-md"></img>
                         <section className="flex justify-between items-center">

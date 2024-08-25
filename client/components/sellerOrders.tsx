@@ -6,16 +6,18 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { TOrderStatus } from "@/lib/types";
 import { Button } from "./ui/button";
 
-type ordersToShow = Omit<TOrderStatus, "DISPUTED" | "PENDING">;
+type ordersToShow = Omit<TOrderStatus, "DISPUTED" >
 type OrderStatusKeys = keyof ordersToShow;
 
 const reducedOrderStatus: ordersToShow = {
+    PENDING : "PENDING",
     PROCESSING: "PROCESSING",
-    DELIVERED: "DELIVERED",
     CANCELLED: "CANCELLED",
+    DELIVERED: "DELIVERED",
 };
 export const Orders = ({ orders }: { orders: Order[] }) => {
-    const [selectedStatus, setSelectedStatus] = useState<OrderStatusKeys>("PROCESSING");
+    const [selectedStatus, setSelectedStatus] = useState<OrderStatusKeys>("PENDING");
+    console.log(orders)
 
     const handleStatusChange = (newStatus: string) => {
         if (Object.keys(reducedOrderStatus).includes(newStatus)) {
@@ -23,15 +25,22 @@ export const Orders = ({ orders }: { orders: Order[] }) => {
         }
     };
 
-    const activeOrders = orders.filter(order => order.status === "PROCESSING");
-    const completedOrders = orders.filter(order => order.status === "DELIVERED");
-    const totalOrdersAmount = orders.reduce((totalAmount, order) => totalAmount + order.amount, 0);
+    const getOrdersByStatus = (status: OrderStatusKeys) => orders.filter(order => order.status === reducedOrderStatus[status])
+
+    const ordersByStatus = {
+        PENDING: getOrdersByStatus("PENDING"),
+        PROCESSING: getOrdersByStatus("PROCESSING"),
+        DELIVERED: getOrdersByStatus("DELIVERED"),
+        CANCELLED: getOrdersByStatus("CANCELLED"),
+    }
+
+    const totalOrdersAmount = ordersByStatus[selectedStatus].reduce((totalAmount, order) => totalAmount + order.amount, 0);
 
     return (
         <Card className="p-4">
             <CardContent className="flex justify-between">
                 <h3>
-                    {activeOrders.length} ({totalOrdersAmount})
+                    {ordersByStatus[selectedStatus].length} ({totalOrdersAmount})
                 </h3>
                 <Select onValueChange={handleStatusChange}>
                     <SelectTrigger>

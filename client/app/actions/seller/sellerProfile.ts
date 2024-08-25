@@ -3,34 +3,35 @@ import prisma from "@/app/db/db"
 import { CreateSellerProfileInput } from "@/lib/types"
 import { SellerProfile } from "@prisma/client"
 
-export const createSellerProfile = async (data : CreateSellerProfileInput) =>{
+export const createSellerProfile = async (data: CreateSellerProfileInput) => {
     try {
-        const sp = prisma.sellerProfile.create({
-            data: {
-                userId : data.userId,
-                name : data.name,
-                description : data.description,
-                subNiche : data.subNiche,
-                website : data.personalWebsite,
-                wallet : data.wallet.toString(),
-                course : data.course,
-                institute : data.institute,
-                startDate : data.startDate,
-                endDate : data.endDate,
-                phoneNumber : data.phoneNumber,
-            }
-        })
-        const user = prisma.user.update({
-            where : {id : data.userId},
-            data : { role : "BOTH"}
-        })
-        await Promise.all([user, user])
-        return true
+        const [sellerProfile, user] = await Promise.all([
+            prisma.sellerProfile.create({
+                data: {
+                    userId: data.userId,
+                    name: data.name,
+                    description: data.description,
+                    subNiche: data.subNiche,
+                    website: data.personalWebsite,
+                    wallet: data.wallet.toString(),
+                    course: data.course,
+                    institute: data.institute,
+                    startDate: data.startDate,
+                    endDate: data.endDate,
+                    phoneNumber: data.phoneNumber,
+                },
+            }),
+            prisma.user.update({
+                where: { id: data.userId },
+                data: { role: "BOTH" },
+            }),
+        ]);
+        return true;
     } catch (err) {
-        console.error('Error creating seller profile : ', err)
-        return false
+        console.error("Error creating seller profile : ", err);
+        return false;
     }
-}
+};
 export const getSellerProfile = async (id:string) =>{
     try {
         const profile = await prisma.sellerProfile.findUnique({

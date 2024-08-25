@@ -39,7 +39,7 @@ model SellerProfile {
   profilePicture          String                @default("https://firebasestorage.googleapis.com/v0/b/chatapp-4deee.appspot.com/o/ProfilePics%2Fdefault-pic.jpg?alt=media&token=53c51d35-079f-4e2e-addc-c6b40cfe8630")              
   subNiche                SubNiche[]            
   createdAt               DateTime              @default(now())
-  updatedAt               DateTime              @updatedAt
+  updatedAt               DateTime              @updatedAt @default(now())
   gigs                    Gig[]           
   orders                  Order[]               @relation("SellerOrders")
   user                    User                  @relation(fields: [userId], references: [id])
@@ -78,7 +78,8 @@ model PricingPackage {
 model Order {    
   id                      String                @id @default(uuid())
   packageId               String        
-  gigId                   String        
+  gigId                   String
+  quantity                Int                   @default(1)       
   buyerId                 String        
   sellerId                String        
   status                  OrderStatus           @default(PENDING)
@@ -86,6 +87,7 @@ model Order {
   amount                  Float       
   deadline                DateTime        
   createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
   dispute                 Dispute?        
   gig                     Gig                   @relation(fields: [gigId], references: [id])
   buyer                   User                  @relation("BuyerOrders", fields: [buyerId], references: [id])
@@ -107,10 +109,9 @@ model Escrow {
   createdAt               DateTime              @default(now())
   updatedAt               DateTime              @updatedAt
   resolvedAt              DateTime?
-  transactionId           String?
+  transactionId           String
   order                   Order                 @relation(fields: [orderId], references: [id])
 }
-
 enum EscrowStatus {
   PENDING
   COMPLETED
@@ -144,13 +145,12 @@ model Review {
 model Transaction {
   id                      String                @id @default(uuid())
   orderId                 String    
-  order                   Order                 @relation(fields: [orderId], references: [id])
   fromAddress             String    
   toAddress               String    
-  amount                  Float   
   currency                String    
   txHash                  String                @unique
   status                  String    
+  order                   Order                 @relation(fields: [orderId], references: [id])
   purpose                 TransactionPurpose    
   createdAt               DateTime              @default(now())
 }
@@ -177,9 +177,14 @@ enum UserRole {
 }
 enum OrderStatus {
   PENDING
+  ACCEPTED_BY_SELLER
+  PAYMENT_PENDING
   PROCESSING
   DISPUTED
-  CANCELLED
+  CANCELLED_BY_BUYER
+  CANCELLED_BY_SELLER
+  COMPLETED_BY_SELLER
+  COMPLETED_BY_BUYER
   DELIVERED
 }
 enum PaymentStatus {

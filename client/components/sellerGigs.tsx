@@ -9,6 +9,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
+import CreatePricingPage from '@/app/seller_dashboard/gigs/(create)/create-pricing/page';
+import { editPricingPackage } from '@/app/actions/seller/pricingPackage';
 export const GigList = ({ gigs }: { gigs: IGetGigs[] }) => {
   const [selectedGigIds, setSelectedGigIds] = useState<string[]>([]);
   const [editingGig, setEditingGig] = useState<IGetGigs | null>(null);
@@ -75,7 +77,7 @@ export const GigList = ({ gigs }: { gigs: IGetGigs[] }) => {
                     <Tabs defaultValue="Gig" className="w-full">
                       <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="Gig">Gig</TabsTrigger>
-                        <TabsTrigger value="password">Password</TabsTrigger>
+                        <TabsTrigger value="pricing">Pricings</TabsTrigger>
                       </TabsList>
                       <TabsContent value="Gig">          
                         <DialogHeader>
@@ -83,37 +85,73 @@ export const GigList = ({ gigs }: { gigs: IGetGigs[] }) => {
                         </DialogHeader>
                         <CreateGig gig={editingGig as IGetGigs} />
                       </TabsContent>
-                      <TabsContent value="password">
-                        <Card>
+                      <TabsContent value="pricing">
+                        {/* <Card>
                           <CardHeader>
-                            <CardTitle>Password</CardTitle>
-                            <CardDescription>
+                            <CardTitle>Pricings</CardTitle>
+                            {/* <CardDescription>
                               Change your password here. After saving, you'll be logged out.
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="space-y-2">
-                            <div className="space-y-1">
-                              <Label htmlFor="current">Current password</Label>
-                              <Input id="current" type="password" />
-                            </div>
-                            <div className="space-y-1">
-                              <Label htmlFor="new">New password</Label>
-                              <Input id="new" type="password" />
-                            </div>
-                          </CardContent>
-                          <CardFooter>
-                            <Button>Save password</Button>
-                          </CardFooter>
-                        </Card>
+                            </CardDescription> */}
+                          {/* </CardHeader> */}
+                          {/* <CardContent className="space-y-2 p-4"> */}
+                          <EditPricing pricing={editingGig?.pricing || []}/>
+                        {/* </CardContent>
+                        </Card> */}
                       </TabsContent>
                     </Tabs>
-                </DialogContent>
-              </Dialog>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
+        ))}
+              </div>
+            </div>
+        )}
+
+
+const EditPricing = ({ pricing, }: { pricing: IGetGigs["pricing"]}) => {
+  const [selectedPricing, setSelectedPricing] = useState(pricing[0].id);
+  const [pricings, setPricings] = useState(pricing);
+
+  const handleChange = (index: number, newPricing: IGetGigs["pricing"][number]) => {
+    setPricings((prev) => {
+      return prev.map((p, i) => {
+        if (i === index) {
+          return newPricing;
+        }
+        return p;
+      });
+    });
+  };
+
+  return (
+    <Tabs value={selectedPricing} className=''>
+      <TabsList className='w-full'>
+        {pricings.map((pricing, index) => (
+          <TabsTrigger key={pricing.id} value={pricing.id} className='w-full'>
+            {pricing.name.charAt(0).toUpperCase() + pricing.name.slice(1)}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+      <TabsContent value={selectedPricing}>
+        {pricings.map((pricing, index) => (
+          <div key={pricing.id} className="flex flex-col gap-4">
+            <Label>Name</Label>
+            <Input value={pricing.name} onChange={(e) => handleChange(index, { ...pricing, name: e.target.value })} />
+            <Label>Price</Label>
+            <Input value={pricing.price} type="number" onChange={(e) => handleChange(index, { ...pricing, price: Number(e.target.value) })} />
+            <Label>Delivery Time</Label>
+            <Input value={pricing.deliveryTime} type="number" onChange={(e) => handleChange(index, { ...pricing, deliveryTime: Number(e.target.value) })} />
+            <Label>Features</Label>
+            <Input value={pricing.features.join(", ")} onChange={(e) => handleChange(index, { ...pricing, features: e.target.value.split(", ").map(f => f.trim()) })} />
+            <Button 
+              className="space-y-0 "
+              onClick={()=>{
+              editPricingPackage(pricing)
+            }}>Update</Button>
           </div>
         ))}
-      </div>
-    </div>
-  );
-};
-
+      </TabsContent>
+    </Tabs>
+  )
+}

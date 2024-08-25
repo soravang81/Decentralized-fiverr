@@ -12,10 +12,18 @@ import styled from 'styled-components';
 import { useRouter } from "next/navigation";
 import { UserRole } from "@prisma/client";
 import { toast } from "sonner";
+import { useRole } from "@/lib/recoil/selector";
+import { replyOrder } from "@/app/actions/buyer/orders";
 
 export const RoleToggleButton = ({ session }: { session: Session | null }) => {
   const [currentrole, setCurrentRole] = useRecoilState<UserRole>(currentRole);
+  const latestRole = useRole()
   const router = useRouter();
+
+  // useEffect(() => {
+  //   console.log(latestRole)
+  //   latestRole && setCurrentRole(latestRole)
+  // },[])
 
   const toggleRole = useCallback(async() => {
     if (!session) {
@@ -35,7 +43,7 @@ export const RoleToggleButton = ({ session }: { session: Session | null }) => {
   }, [currentrole, setCurrentRole, session]);
 
   return (
-    <Button variant="ghost" onClick={toggleRole}>
+    <Button variant="ghost" onClick={toggleRole} className="self-center align-middle">
       Switch to {currentrole === "BUYER" ? "Seller" : "Buyer"}
     </Button>
   );
@@ -100,3 +108,15 @@ const CustomWalletMultiButton: React.FC = (props) => {
 
 export default CustomWalletMultiButton;
 
+export const OrderButtons = ({orderId}:{orderId:string}) => {
+    return <>
+    <Button variant="outline" size="sm" onClick={ async () => {
+      await replyOrder({orderId , reply : "ACCEPT"})
+      window.location.reload()
+    }}>Accept</Button>
+    <Button variant="outline" size="sm" onClick={ async () => {
+      await replyOrder({orderId , reply : "REJECTED_BY_SELLER"})
+      window.location.reload()
+    }}>Reject</Button>
+    </>
+}

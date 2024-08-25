@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
-import Navbar from "@/components/navbar";
+import {Navbar} from "@/components/navbar";
 // import { RoleBasedRedirectWrapper } from "@/components/rolebasedRedirect";
 import { getServerSession, Session } from "next-auth";
 import { authConfig } from "@/lib/auth";
