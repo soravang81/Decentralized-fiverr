@@ -23,7 +23,7 @@ export default async function SellerDashboard () {
     if (!sellerProfileData){
         return <div className="bg-gray-100 h-screen flex justify-center p-28">
             <div className="bg-white p-8 rounded-lg shadow-lg h-fit">
-                <h1 className="text-3xl font-bold text-center">You don't have a seller profile</h1>
+                <h1 className="text-3xl font-bold text-center">You do not have a seller profile</h1>
                 <p className="text-center my-4">Please create a seller profile to access your dashboard</p>
                 <div className="flex justify-center">
                     <Link href="/create-seller-profile"

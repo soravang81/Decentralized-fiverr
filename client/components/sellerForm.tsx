@@ -27,11 +27,6 @@ export const PersonalInfo: React.FC<{session: Session | null}> = ({ session }) =
   const [endYear, setEndYear] = useState<string>("");
   const [course, setCourse] = useState<string>("");
 
-  if (!session) {
-    toast.error("Please login first !");
-    return null;
-  }
-
   const selectedCategoryMapping = nicheMappings.find(mapping => mapping.category === category);
 
   const currentYear = new Date().getFullYear();
@@ -44,12 +39,17 @@ export const PersonalInfo: React.FC<{session: Session | null}> = ({ session }) =
   const availableEndYears = useMemo(() => {
     if (!startYear) return [];
     const startYearNum = parseInt(startYear, 10);
-    const maxEndYear = Math.max(startYearNum + 5);
+    const maxEndYear = Math.max(startYearNum + 5, currentYear);
     return Array.from(
       { length: maxEndYear - startYearNum + 1 },
       (_, index) => (startYearNum + index).toString()
     );
   }, [startYear, currentYear]);
+
+  if (!session) {
+    toast.error("Please login first !");
+    return null;
+  }
 
   const handleAddSubNiche = () => {
     if (currentSubNiche && !subNiche.includes(currentSubNiche)) {

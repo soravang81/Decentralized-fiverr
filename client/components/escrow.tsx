@@ -10,10 +10,8 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { BN, Idl, Program, web3 } from "@project-serum/anchor";
 import { createEscrowAndTransaction, createOrder } from "@/app/actions/buyer/orders";
-import { PricingPackage } from "@prisma/client";
 import { getSolanaPrice } from "@/lib/utils";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
-import { createEscrow } from "@/app/actions/escrow/escrow";
 import { IGetOrders } from "@/lib/types";
 
 const OWNER_PUBLIC_KEY = new PublicKey("CRiaHeSL2BsokCkHCBSzwPEr2sjMYZdpa1p6w3QSjPxM");

@@ -7,7 +7,7 @@ import { PlusCircle } from "lucide-react";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 
-export default async function() {
+export default async function SellerGIgs() {
   const session = await getServerSession(authConfig)
   if (!session) {
     return null

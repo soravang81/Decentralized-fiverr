@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getTimeDifference } from "@/lib/utils"
 
-export default async function () {
+export default async function SellerOrdersPage () {
    const orders = await getOrders({user : "SELLER"})
    // console.log("orders ============", orders)
    const pendingOrders = orders.filter(order => ["PENDING", "ACCEPTED_BY_SELLER", "PAYMENT_PENDING"].includes(order.status))

@@ -1,5 +1,3 @@
-
-import { Keypair } from "@solana/web3.js";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 // import fs from "fs"

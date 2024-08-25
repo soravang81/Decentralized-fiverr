@@ -1,7 +1,7 @@
 import { MyOrders } from "@/components/myOrders";
 import { getOrders } from "../actions/buyer/orders";
 
-export default async function () {
+export default async function BuyerOrders () {
     const orders = await getOrders({user : "BUYER"})
     return <div className="container py-6">
         <div>
