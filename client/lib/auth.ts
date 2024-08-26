@@ -1,6 +1,6 @@
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
-import db from "@/app/db/db";
+import db from "@/db/db"
 import { NextAuthOptions, Session } from 'next-auth';
 
 enum Provider {

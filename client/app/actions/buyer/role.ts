@@ -1,7 +1,7 @@
 "use server"
 
 import { UserRole } from "@prisma/client"
-import prisma from "../../db/db"
+import prisma from "@/db/db"
 
 export const getRole = async (id:string) =>{
     const res = await prisma.user.findFirst({

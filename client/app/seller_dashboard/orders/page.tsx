@@ -8,7 +8,7 @@ import { getTimeDifference } from "@/lib/utils"
 
 export default async function SellerOrdersPage () {
    const orders = await getOrders({user : "SELLER"})
-   // console.log("orders ============", orders)
+
    const pendingOrders = orders.filter(order => ["PENDING", "ACCEPTED_BY_SELLER", "PAYMENT_PENDING"].includes(order.status))
    const activeOrders = orders.filter(order => ["PROCESSING" , "COMPLETED_BY_SELLER" , "COMPLETED_BY_BUYER"].includes(order.status))
    const cancelledOrders = orders.filter(order => ["CANCELLED_BY_BUYER", "CANCELLED_BY_SELLER"].includes(order.status))
@@ -29,15 +29,13 @@ export default async function SellerOrdersPage () {
                      <div className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p>
                         <section className="flex flex-col gap-1 ml-4">
-                           <p className="text-gray-500">From : {order.seller.name}</p>
+                           <p className="text-gray-500">By : {order.seller.name}</p>
                            <p className="text-gray-500">{getTimeDifference(order.createdAt)}</p>
-                           {/* <p className="text-gray-500 text-wrap">Deadline : {order.deadline.toString()}</p> */}
                         </section>
                      </div>
                      <div className="flex flex-col gap-2">
                         {/* TODO : send email to buyer if accepted or rejected */}
                         <span className="self-center text-lg font-semibold">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</span>
-                        <span className="self-center text-lg font-semibold">${order.amount}</span>
                         <section className="flex gap-2">
                            {order.status === "PENDING" && <OrderButtons orderId={order.id}/>}
                            {<span>Status : {order.status === "PAYMENT_PENDING" ?  "Payment pending by Buyer" : order.status}</span>}
@@ -62,7 +60,7 @@ export default async function SellerOrdersPage () {
                      </div>
                      <div className="flex flex-col gap-2">                              
                         <p className="text-gray-700 text-lg">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>
-                        <p className="text-gray-700 text-lg">${order.amount}</p>
+                        {/* <p className="text-gray-700 text-lg">${order.amount}</p> */}
                         <section className="flex gap-2">
                            <CancelOrder order={order} seller/>
                            {order.status !=="COMPLETED_BY_SELLER" && <MarkComplete order={order} freelancer/>}
@@ -79,10 +77,11 @@ export default async function SellerOrdersPage () {
                   <div key={order.id} className="bg-white p-4  rounded-lg border flex justify-between shadow-md">
                      <section className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p> 
-                        <p className="text-gray-500 ml-2">By : {order.seller.name}</p>
+                        <p className="text-gray-500 ml-2">For : {order.seller.name}</p>
                      </section>
-                     <p className="text-gray-500">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>
-                     <p className="text-gray-500">${order.amount}</p>
+                     <section>
+                        <p className="text-gray-500">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>
+                     </section>
                   </div>
                ))}
             </div>
@@ -90,8 +89,14 @@ export default async function SellerOrdersPage () {
          <TabsContent value="delivered">
             <div className="flex flex-col gap-4 ">
                {deliveredOrders.map(order => (
-                  <div key={order.id} className="bg-white p-4 rounded-lg border shadow-md">
-                     <p className="text-gray-700">{order.gig.title}</p>
+                  <div key={order.id} className="bg-white p-4  rounded-lg border flex justify-between shadow-md">
+                     <section className="flex flex-col">
+                        <p className="font-semibold text-lg">{order.gig.title}</p> 
+                        <p className="text-gray-500 ml-2">For : {order.seller.name}</p>
+                     </section>
+                     <section>
+                        <p className="text-gray-500">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>
+                     </section>
                   </div>
                ))}
             </div>

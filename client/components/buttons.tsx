@@ -30,15 +30,14 @@ export const RoleToggleButton = ({ session }: { session: Session | null }) => {
       throw new Error("Session is null.");
     }
 
-    const newRole = currentrole === "BUYER" ? "SELLER" : "BUYER";
-    const route = newRole === "SELLER" ? "/seller_dashboard" : "/";
+    const newRole = latestRole === "BUYER" ? "SELLER" : "BUYER";
+    const route = newRole === "SELLER" ? "/seller_dashboard" : "/dashboard";
     router.replace(route);
     await updateLastRole({ id: session.user.id, role: newRole })
       .catch((error) => {
         toast.error(error as string);
       });
     setCurrentRole(newRole);
-
     
   }, [currentrole, setCurrentRole, session]);
 
@@ -51,20 +50,35 @@ export const RoleToggleButton = ({ session }: { session: Session | null }) => {
 
 export const LoginButton = ({session}:{session : Session | null}) => {
     const statusText = session?.user ? "Logout" : "Login";
-
+    if(session) return null
     return (
-        <Button variant={session ? "ghost" : "default"} onClick={()=>!session ? signIn() : signOut()}>{statusText}</Button>
+        <Button variant="default" className="md:block hidden" onClick={()=>signIn()}>{statusText}</Button>
     )
 }
 
 const StyledButtonWrapper = styled.div`
+  display: flex;
+  align-items: end;
+  width : 100%;
+  height : fit-content;
+  
+  .wallet-adapter-dropdown {
+    width : 100%;
+  positon : absolute;
+}
+
   .wallet-adapter-button {
-    background-color: #1a1a1a;
+    width : 100%;
+    background-color :#1a1a1a;
     color: white;
     font-family: 'Arial', sans-serif;
     font-size: 16px;
     font-weight: bold;
     padding: 6px 6px;
+     @media (max-width: 768px) {
+      font-size : 0px;
+      padding : 0px
+     }
     border-radius: 5px;
     border: none;
     cursor: pointer;
@@ -81,16 +95,24 @@ const StyledButtonWrapper = styled.div`
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   .wallet-adapter-button-start-icon img {
-    width : 32px;
     height : 32px;
   }
   .wallet-adapter-button-start-icon {
-    width : fit-content;
+   @media (max-width: 768px) {
+   margin : 0px;
+    }
   }
   &.wallet-adapter-button-trigger {
-    background-color: #1a1a1a;
+    background-color :#1a1a1a;
+    color: white;
+    @media (max-width: 768px) {
+    padding : 4px;
+    // height : ;
+    }
+    width : 100%;
     padding : 16px;
-    height : 36px;
+    height : 40px;
+    bottom : 0px;
   }
   .wallet-adapter-button-end-icon {
     margin-left: 8px;
@@ -98,10 +120,12 @@ const StyledButtonWrapper = styled.div`
 }
 `;
 
-const CustomWalletMultiButton: React.FC = (props) => {
+const CustomWalletMultiButton: React.FC = (props , {e}:{e?:any}) => {
+  e && e.preventDefault()
+  e && e.stopPropogation()
   return (
     <StyledButtonWrapper>
-      <WalletMultiButton {...props} />
+      <WalletMultiButton  {...props} />
     </StyledButtonWrapper>
   );
 };

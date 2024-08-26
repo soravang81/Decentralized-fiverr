@@ -13,9 +13,6 @@ export default async function SellerDashboard () {
     if(!session) {
         return
     }
-    //   createGig(dummygig)
-    // createOrder(dummyorder)
-    // createPricingPackage(dummypricing)
 
     const sellerProfileData = await getSellerProfile(session?.user.id)
     console.log(sellerProfileData)

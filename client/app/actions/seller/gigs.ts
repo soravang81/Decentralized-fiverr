@@ -1,6 +1,6 @@
 "use server"
 import { CreateGigInput, CreatePricingPackageInput, IGetGigs, PricingPackageInput } from "@/lib/types"
-import prisma from "../../db/db"
+import prisma from "@/db/db"
 import { getServerSession } from "next-auth"
 import { authConfig } from "@/lib/auth"
 import { Gig } from "@prisma/client"
@@ -90,22 +90,19 @@ export const getGig = async (id: string): Promise<IGigExtended | null> => {
     }
 }
 
-export const getGigs = async (id:string): Promise<{gigs: IGetGigs[] } | false> => {
+export const getGigs = async (id?:string): Promise<{gigs: IGetGigs[] } | false> => {
     const session = await getServerSession(authConfig);
-    if (!session || !session.user.id) {
-        throw new Error("Unauthorized");
-    }
     try {
         const gigs = await prisma.gig.findMany({
             where: {
-                AND: {
-                    seller : {
-                        userId : {
-                            not : id
+                status: "ACTIVE",
+                ...(session?.user.id ? {
+                    seller: {
+                        userId: {
+                            not: session.user.id
                         }
-                    },
-                    status: "ACTIVE",
-                },
+                    }
+                } : {})
             },
             select: {
                 id: true,
@@ -122,6 +119,7 @@ export const getGigs = async (id:string): Promise<{gigs: IGetGigs[] } | false> =
                 tags: true,
             },
         });
+        console.log(gigs)
         return {gigs}
     } catch (e) {
         console.error(e);

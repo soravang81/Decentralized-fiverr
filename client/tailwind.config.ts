@@ -68,6 +68,12 @@ const config = {
           to: { height: "0" },
         },
       },
+      dropShadow: {
+        glow: [
+        "0 2px 15px rgba(0, 0, 0, 0.5)",
+        "0 2px 10px rgba(0, 0, 0, 0.2)"
+      ]
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",

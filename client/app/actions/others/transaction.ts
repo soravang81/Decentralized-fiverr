@@ -1,6 +1,6 @@
 "use server"
 
-import prisma from "@/app/db/db";
+import prisma from "@/db/db"
 import { authConfig } from "@/lib/auth";
 import { TransactionPurpose } from "@prisma/client";
 import { getServerSession } from "next-auth";

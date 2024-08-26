@@ -14,8 +14,6 @@ import { Button } from './ui/button';
 
 export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
   const [formData, setFormData] = useRecoilState(gigform)
-  // console.log(gig)
-
   const [category, setCategory] = useState<Category | null>(null)
   const [niche, setNiche] = useState<Niche | null>(null)
   const [currentSubNiche, setCurrentSubNiche] = useState<SubNiche | null>(null)

@@ -15,9 +15,6 @@ export const SellerNavbar = () => {
         },{ 
             name: 'Orders',
             path: '/seller_dashboard/orders' 
-        },{ 
-            name: 'Profile',
-            path: '/seller_dashboard/profile' 
         }
     ];
     
@@ -27,6 +24,7 @@ export const SellerNavbar = () => {
             <div className="items-center flex sm:space-x-8">
                 {navItems.map((item) => (
                     <Link
+                    className='p-0 h-fit flex items-center'
                         key={item.name}
                         href={item.path}
                     >
@@ -53,6 +51,7 @@ export const BuyerNavbar = () => {
             <div className="sm:ml-6 flex items-center sm:space-x-8">
                 {navItems.map((item) => (
                     <Link
+                    className='p-0 h-fit flex items-center'
                         key={item.name}
                         href={item.path}
                     >

@@ -1,5 +1,5 @@
 "use server"
-import prisma from "@/app/db/db"
+import prisma from "@/db/db"
 import { CreateSellerProfileInput } from "@/lib/types"
 import { SellerProfile } from "@prisma/client"
 

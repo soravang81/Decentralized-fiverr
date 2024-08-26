@@ -1,5 +1,5 @@
 "use server"
-import prisma from "@/app/db/db"
+import prisma from "@/db/db"
 import { authConfig } from "@/lib/auth"
 import { CreateEscrowParams, CreateOrderInput, IGetOrders } from "@/lib/types"
 import { OrderStatus } from "@prisma/client"

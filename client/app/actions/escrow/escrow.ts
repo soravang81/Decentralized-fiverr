@@ -2,7 +2,7 @@
 'use server'
 
 import { Connection, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
-import prisma from '@/app/db/db';
+import prisma from "@/db/db"
 
 export const getEscrowAddress = async (orderId : string) => {
   try {

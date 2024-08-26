@@ -1,6 +1,6 @@
 // "use server"
 import { CreatePricingPackageInput, EditPricingPackageInput } from "@/lib/types";
-import prisma from "../../db/db";
+import prisma from "@/db/db"
 
 export const getPricingPackageByGigId = async (gigId: string) => {
     try {
