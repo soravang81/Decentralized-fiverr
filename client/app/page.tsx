@@ -1,5 +1,3 @@
-"use client"
-import { FunctionComponent } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { CloudSunIcon, CopyleftIcon, CurrencyIcon, DiscIcon, GithubIcon, LockIcon, NetworkIcon, TextIcon, TwitterIcon } from "@/lib/icons"
