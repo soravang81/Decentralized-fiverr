@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CloudSunIcon, CopyleftIcon, CurrencyIcon, DiscIcon, GithubIcon, LockIcon, NetworkIcon, TextIcon, TwitterIcon } from "@/lib/icons"
+import {CopyleftIcon, CurrencyIcon , GithubIcon, LockIcon, NetworkIcon, TextIcon, TwitterIcon } from "@/lib/icons"
 
 export default function Home() {
   return (
@@ -84,7 +84,7 @@ function TestimonialSection() {
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl font-bold mb-8 text-gray-800">What Our Users Say</h2>
         <blockquote className="text-xl italic text-gray-700">
-          "This platform has revolutionized how I work as a freelancer. The security and transparency provided by the blockchain technology give me peace of mind with every transaction."
+          &quot;This platform has revolutionized how I work as a freelancer. The security and transparency provided by the blockchain technology give me peace of mind with every transaction.&quot;
         </blockquote>
         <p className="mt-4 font-semibold text-gray-800">- Example User, Freelance Designer</p>
       </div>
@@ -109,7 +109,6 @@ function Footer() {
     <footer className="bg-gray-800 text-white px-4 py-4">
       <div className="max-w-6xl mx-auto flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
         <div className="flex items-center gap-2">
-          {/* <CloudSunIcon className="w-6 h-6" /> */}
           <span className="text-3xl font-bold">Dfiverr</span>
         </div>
         <nav className="flex items-center gap-6">
