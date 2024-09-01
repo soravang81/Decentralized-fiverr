@@ -2,6 +2,7 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import db from "@/db/db"
 import { NextAuthOptions, Session } from 'next-auth';
+import { UserRole } from "@prisma/client";
 
 enum Provider {
   Google = "Google",
@@ -46,7 +47,7 @@ export const authConfig: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        session.user.role = token.role as UserRole;
       }
       return session;
     },
