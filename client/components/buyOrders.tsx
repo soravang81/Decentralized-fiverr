@@ -4,11 +4,9 @@ import { Button } from "./ui/button"
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet"
 import { useEffect, useState } from "react"
 import { Card , CardContent , CardFooter , CardHeader , CardTitle} from "./ui/card"
-import { ArrowLeft } from "lucide-react"
-import InitializeEscrow from "./escrow"
-import { PublicKey } from "@solana/web3.js"
 import { createOrder, replyOrder } from "@/app/actions/buyer/orders"
 import { toast } from "sonner"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogOverlay, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog"
 
 export const BuyOrders = ({pkg , walletAddress , sellerId }:{pkg : PricingPackage , sellerId : string,walletAddress : string}) => {
     const { gigId, name, description, price, deliveryTime } = pkg
@@ -71,7 +69,26 @@ export const BuyOrders = ({pkg , walletAddress , sellerId }:{pkg : PricingPackag
                     <p className="text-lg font-semibold">Total: ${total}</p>
                     <p className="text-sm text-muted-foreground">Est. delivery: {deliveryTime} days</p>
                 </CardFooter>
-                <Button onClick={handleSubmit} className="mt-4">Send Order Approval</Button>
+                <AlertDialog>
+                    <AlertDialogTrigger asChild className="mt-2">
+                        <Button variant="default" className="w-full" >Book Order</Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogOverlay />
+                    <AlertDialogContent>
+                        <AlertDialogTitle>Confirm Order</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to proceed with this order?
+                        </AlertDialogDescription>
+                        <div className="grid grid-cols-2 gap-2">
+                            <AlertDialogCancel asChild>
+                                <Button variant="outline" className="w-full" >Cancel</Button>
+                            </AlertDialogCancel>
+                            <AlertDialogAction asChild>
+                                <Button variant="default" className="w-full" onClick={handleSubmit}>Confirm</Button>
+                            </AlertDialogAction>
+                        </div>
+                    </AlertDialogContent>
+                </AlertDialog>
             </Card>}
         </SheetContent>
     </Sheet>

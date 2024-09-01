@@ -86,8 +86,8 @@ const PricingPackageForm = ({ onAdd }: { onAdd: (pricingPkg: Omit<CreatePricingP
     // packageType: PackageType.BASIC,
     name: '',
     description: '',
-    price: 0,
-    deliveryTime: 0,
+    price: "",
+    deliveryTime:"",
     features: []
   });
 
@@ -106,8 +106,8 @@ const PricingPackageForm = ({ onAdd }: { onAdd: (pricingPkg: Omit<CreatePricingP
       // packageType: PackageType.BASIC,
       name: '',
       description: '',
-      price: 0,
-      deliveryTime: 0,
+      price: "",
+      deliveryTime: "",
       features: []
     });
   };
@@ -119,11 +119,11 @@ const PricingPackageForm = ({ onAdd }: { onAdd: (pricingPkg: Omit<CreatePricingP
         <option value={PackageType.STANDARD}>Standard</option>
         <option value={PackageType.PREMIUM}>Premium</option>
       </select> */}
-      <input type="text" name="name" value={packageData.name} onChange={handleChange} placeholder="Package Name"  className="w-full p-2 border rounded" />
+      <input name="name" value={packageData.name} onChange={handleChange} placeholder="Package Name"  className="w-full p-2 border rounded" />
       <textarea name="description" value={packageData.description} onChange={handleChange} placeholder="Package Description"  className="w-full p-2 border rounded" />
-      <input type="number" name="price" value={packageData.price} onChange={handleChange} placeholder="Price"  className="w-full p-2 border rounded" />
-      <input type="number" name="deliveryTime" value={packageData.deliveryTime} onChange={handleChange} placeholder="Delivery Time (days)"  className="w-full p-2 border rounded" />
-      <input type="text" name="features" value={packageData.features.join(', ')} onChange={(e) => setPackageData(prev => ({ ...prev, features: e.target.value.split(',').map(f => f.trim()) }))} placeholder="Features (comma-separated)" className="w-full p-2 border rounded" />
+      <input name="price" value={packageData.price} onChange={handleChange} placeholder="Price"  className="w-full p-2 border rounded" />
+      <input name="deliveryTime" value={packageData.deliveryTime} onChange={handleChange} placeholder="Delivery Time (days)"  className="w-full p-2 border rounded" />
+      <input name="features" value={packageData.features.join(', ')} onChange={(e) => setPackageData(prev => ({ ...prev, features: e.target.value.split(',').map(f => f.trim()) }))} placeholder="Features (comma-separated)" className="w-full p-2 border rounded" />
       <button onClick={handleAddPackage} type="button" className="w-full px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-colors">Add Package</button>
     </div>
   );

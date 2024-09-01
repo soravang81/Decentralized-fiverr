@@ -42,8 +42,8 @@ export const createGig = async ({gig, pkg}: {gig: Omit<CreateGigInput,'sellerId'
                         // packageType: pkg.packageType,
                         name: pkg.name,
                         description: pkg.description,
-                        price: pkg.price,
-                        deliveryTime: pkg.deliveryTime,
+                        price: parseInt(pkg.price),
+                        deliveryTime: parseInt(pkg.deliveryTime),
                         features: pkg.features
                     }
                 });

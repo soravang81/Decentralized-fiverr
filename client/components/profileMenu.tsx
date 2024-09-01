@@ -100,7 +100,7 @@ export function ProfileMenu({session, }:{session : Session }) {
 {/* ==================== */}
           <DropdownMenuSeparator />
           <DropdownMenuItem className="p-0">
-            <Button variant="ghost" onClick={()=>signOut()} className="w-full h-full flex gap-3 justify-start">
+              <Button variant="ghost" onClick={async()=>{window.location.href = "/";await signOut();}} className="w-full h-full flex gap-3 justify-start">
               <LogOut size={22} />
               Logout
             </Button>

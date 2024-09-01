@@ -33,8 +33,8 @@ function HeroSection() {
             <Button size="lg" href="#" className="w-full sm:w-auto  hover:scale-105 transition-transform duration-200 ease-in-out hover:drop-shadow-glow   hover:bg-gray-800 ">Learn More</Button>
           </div>
         </div>
-        <div className="hidden md:block">
-          <div className="w-full h-full bg-transparent border border-blue-700  shadow-xl rounded-lg  flex items-center justify-center">
+        <div className="hidden md:block ">
+          <div className="w-full h-full transition-transform duration-700 ease-in-out hover:scale-110 bg-transparent border border-blue-700  shadow-xl rounded-lg  flex items-center justify-center">
           <img className="transition-transform duration-200 ease-in-out hover:scale-110" src="./solanaa-removebg.png"></img>
           </div>
         </div>

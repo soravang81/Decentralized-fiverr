@@ -64,7 +64,6 @@ model Gig {
 model PricingPackage {          
   id                      String                @id @default(uuid())
   gigId                   String          
-  // packageType             PackageType         
   name                    String          
   description             String          
   price                   Float         
@@ -112,25 +111,15 @@ model Escrow {
   transactionId           String
   order                   Order                 @relation(fields: [orderId], references: [id])
 }
-enum EscrowStatus {
-  PENDING
-  COMPLETED
-  DISPUTED
-  RESOLVED
-}
-enum GigStatus {
-  ACTIVE
-  DISCARDED
-}
 model Dispute {
   id                      String                @id @default(uuid())
   orderId                 String                @unique
-  order                   Order                 @relation(fields: [orderId], references: [id])
-  description             String            
-  status                  String            
+  disputedBy              String                  
+  reason                  String
+  resolution              DisputeResolutions    @default(PENDING)
   createdAt               DateTime              @default(now())
   updatedAt               DateTime              @updatedAt
-  resolution              String?           
+  order                   Order                 @relation(fields: [orderId], references: [id])
 }
 model Review {
   id                      String                @id @default(uuid())
@@ -154,6 +143,16 @@ model Transaction {
   purpose                 TransactionPurpose    
   createdAt               DateTime              @default(now())
 }
+enum EscrowStatus {
+  PENDING
+  COMPLETED
+  DISPUTED
+  RESOLVED
+}
+enum GigStatus {
+  ACTIVE
+  DISCARDED
+}
 enum PackageType {
   BASIC
   STANDARD
@@ -162,6 +161,12 @@ enum PackageType {
 enum EscrowUsers {
   CLIENT
   RECEIVER
+}
+enum DisputeResolutions {
+  PENDING
+  SENT_TO_BUYER
+  SENT_TO_SELLER
+  ERROR
 }
 enum TransactionPurpose {
   BUYER_TO_ESCROW
@@ -174,6 +179,7 @@ enum UserRole {
   BUYER
   SELLER
   BOTH
+  ADMIN
 }
 enum OrderStatus {
   PENDING

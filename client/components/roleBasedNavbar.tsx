@@ -46,7 +46,7 @@ export const BuyerNavbar = () => {
     
     const pathname = usePathname();
     console.log(pathname)
-    return !pathname.startsWith("/seller_dashboard") ? (
+    return !(pathname.startsWith("/seller_dashboard") || pathname.startsWith("/admin") || pathname === "/") ? (
         <nav className="bg-white flex items-center">
             <div className="sm:ml-6 flex items-center sm:space-x-8">
                 {navItems.map((item) => (

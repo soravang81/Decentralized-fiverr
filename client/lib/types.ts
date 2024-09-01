@@ -154,8 +154,8 @@ export interface CreatePricingPackageInput {
     // packageType: PackageType;
     name: string;
     description: string;
-    price: number;
-    deliveryTime: number;
+    price: string;
+    deliveryTime: string;
     // revisions: number;
     features: string[];
   }

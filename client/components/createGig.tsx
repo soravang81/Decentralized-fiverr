@@ -7,7 +7,7 @@ import { Category, Niche, nicheMappings, SubNiche, CategoryReadable, NicheReadab
 import { useState, useRef, useEffect } from 'react';
 import { uploadImage } from '@/lib/firebase/image';
 import { useRecoilState } from 'recoil';
-import { gigform } from '@/lib/recoil/atoms';
+import { gigform, gigimage } from '@/lib/recoil/atoms';
 import { useRouter } from 'next/navigation';
 import { IGetGigs } from '@/lib/types';
 import { Button } from './ui/button';
@@ -19,7 +19,7 @@ export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
   const [currentSubNiche, setCurrentSubNiche] = useState<SubNiche | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [imageFile, setImageFile] = useState(null);
+  const [imageFile, setImageFile] = useRecoilState(gigimage);
 
   const router = useRouter();
   const selectedCategoryMapping = nicheMappings.find(mapping => mapping.category === category)
@@ -92,7 +92,8 @@ export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const imageUrl = imageFile ? await uploadImage(imageFile) : formData.picture;
+      if(!imageFile) return;
+      const imageUrl = await uploadImage(imageFile)
       const gigData = {
         ...formData,
         picture: imageUrl,

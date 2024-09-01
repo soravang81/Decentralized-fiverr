@@ -24,6 +24,10 @@ export const currentImage = atom<string>({
     key: "currentImage",
     default: ""
 })
+export const gigimage = atom<string | null>({
+    key: "gigimage",
+    default: null
+})
 export const Orders = atom<IGetOrders[]>({
     key: "Orders",
     default: []

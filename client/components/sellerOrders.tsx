@@ -4,7 +4,6 @@ import { Card, CardContent } from "./ui/card";
 import { useState } from "react";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { TOrderStatus } from "@/lib/types";
-import { Button } from "./ui/button";
 
 type ordersToShow = Omit<TOrderStatus, "DISPUTED" >
 type OrderStatusKeys = keyof ordersToShow;
@@ -15,6 +14,7 @@ const reducedOrderStatus: ordersToShow = {
     CANCELLED: "CANCELLED",
     DELIVERED: "DELIVERED",
 };
+
 export const Orders = ({ orders }: { orders: Order[] }) => {
     const [selectedStatus, setSelectedStatus] = useState<OrderStatusKeys>("PENDING");
     console.log(orders)
@@ -34,13 +34,13 @@ export const Orders = ({ orders }: { orders: Order[] }) => {
         CANCELLED: getOrdersByStatus("CANCELLED"),
     }
 
-    const totalOrdersAmount = ordersByStatus[selectedStatus].reduce((totalAmount, order) => totalAmount + order.amount, 0);
+    const totalOrdersAmount = ordersByStatus[selectedStatus].reduce((totalAmount, order) => totalAmount + order.amount * order.quantity, 0);
 
     return (
         <Card className="p-4">
-            <CardContent className="flex justify-between">
-                <h3>
-                    {ordersByStatus[selectedStatus].length} ({totalOrdersAmount})
+            <CardContent className="flex md:flex-row flex-col justify-between items-center">
+                <h3 className="flex w-fit gap-2 p-3">
+                    {<><span>{ordersByStatus[selectedStatus].length}</span> <span>(${totalOrdersAmount})</span></>}
                 </h3>
                 <Select onValueChange={handleStatusChange}>
                     <SelectTrigger>

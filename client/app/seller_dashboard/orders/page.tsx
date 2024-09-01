@@ -2,6 +2,7 @@ import { getOrders, replyOrder } from "@/app/actions/buyer/orders"
 import { OrderButtons } from "@/components/buttons"
 import { CancelOrder } from "@/components/cancelOrder"
 import { MarkComplete } from "@/components/markComplete"
+import RaiseDispute from "@/components/raiseDispute"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getTimeDifference } from "@/lib/utils"
@@ -64,6 +65,7 @@ export default async function SellerOrdersPage () {
                         <section className="flex gap-2">
                            <CancelOrder order={order} seller/>
                            {order.status !=="COMPLETED_BY_SELLER" && <MarkComplete order={order} freelancer/>}
+                           <RaiseDispute orderId={order.id}/>
                         </section>
                         <p className="text-gray-700">Status : {order.status}</p>
                      </div>
@@ -103,4 +105,5 @@ export default async function SellerOrdersPage () {
          </TabsContent>
       </Tabs>
    </div>
+
 }

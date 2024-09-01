@@ -10,6 +10,9 @@ import { MarkComplete } from "./markComplete"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import { Button } from "./ui/button"
 import InitializeEscrow from "./escrow"
+import RaiseDispute from "./raiseDispute"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogOverlay, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog"
+import { Info } from "lucide-react"
 
 export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
     const [orderz,setOrders] = useRecoilState(Orders)
@@ -46,9 +49,30 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
                                 <p className="text-gray-700">{getTimeDifference(order.createdAt)}</p>
                                 <p className="text-gray-700">Status : {order.status}</p>
                             </section>
-                            <section >
-                                {<Button onClick={()=>replyOrder({orderId : order.id , reply : "REJECT_BY_BUYER"})}>Cancel</Button>} 
-                                {/* {<Button onClick={()=>replyOrder({orderId : order.id , reply : "ACEPTE"})}>Pay</Button>}  */}
+                            <section className="ml-4 flex flex-col gap-2">
+                                {order.status === "PROCESSING" || order.status === "PENDING" && <> 
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button variant={"destructive"}>Cancel</Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogTitle>
+                                            Cancel Order
+                                        </AlertDialogTitle>m
+                                        <AlertDialogDescription>
+                                            Are you sure you want to cancel this order?
+                                        </AlertDialogDescription>
+                                        <AlertDialogCancel asChild>m
+                                            <Button variant ="outline" className="w-full" >Cancel</Button>
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction asChild>
+                                            <Button variant="default" className="w-full" onClick={() => replyOrder({orderId : order.id , reply : "REJECT_BY_BUYER"})} >Confirm</Button>
+                                        </AlertDialogAction>
+                                    </AlertDialogContent>    
+                                </AlertDialog>
+                                {/* <RaiseDispute orderId={order.id}/> */}
+                                 </> 
+                                } 
                                 {order.status === "PAYMENT_PENDING" && <InitializeEscrow order={order}/>}
                             </section>
                         </div>
@@ -68,7 +92,9 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
                         <div className="flex flex-col min-w-fit">
                             <p className="text-lg font-semibold">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>
                             <CancelOrder order={order} buyer />
-                            {order.status !== "COMPLETED_BY_BUYER" && <MarkComplete order={order} client />}
+                            {order.status !== "COMPLETED_BY_BUYER" && <><MarkComplete order={order} client />
+                            <RaiseDispute orderId={order.id}/></>
+                            }
                             <p className="text-gray-700">{getTimeDifference(order.createdAt)}</p>
                             <p className="text-gray-700">Status : {order.status}</p>
                         </div>

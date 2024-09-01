@@ -9,9 +9,9 @@ import { BuyerNavbar, SellerNavbar } from "./roleBasedNavbar";
 
 export const Navbar = ({session}:{session:Session | null}) => {
     return (
-        <div className="w-screen border shadow-md text-4xl xl:px-48 lf:px-36 md:px-20 sm:px-6 px-3  py-2 flex justify-between items-center">
+        <div className="max-w-screen border shadow-md text-4xl xl:px-48 lf:px-36 md:px-20 sm:px-6 px-3  py-2 flex justify-between items-center">
             <section className="flex items-center">
-                <Link href={"/"} className="p-0"><span className="font-bold">DFiverr</span></Link>
+                <Link href={"/dashboard"} className="p-0"><span className="font-bold">DFiverr</span></Link>
                 <NavbarSections session={session}/>
             </section>
             <section className="flex justify-between gap-4 items-center">

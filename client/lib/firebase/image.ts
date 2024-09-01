@@ -7,7 +7,6 @@ export async function uploadImage(file:any) {
     console.log("Uploading image")
     const fileName = `${v4()}_${file.name}`;
     
-    // Create a reference to the location where we want to upload the file
     const storageRef = ref(bucket, `gig_images/${fileName}`);
 
     // Upload the file
