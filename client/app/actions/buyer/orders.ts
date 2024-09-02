@@ -4,6 +4,7 @@ import { authConfig } from "@/lib/auth"
 import { CreateEscrowParams, CreateOrderInput, IGetOrders } from "@/lib/types"
 import { OrderStatus } from "@prisma/client"
 import { getServerSession } from "next-auth"
+import { redirect } from "next/navigation"
 
 export const createOrder = async({order}:{order:CreateOrderInput}) =>{
     const session = await getServerSession(authConfig)
@@ -133,7 +134,10 @@ export const markComplete = async({orderId , user}: {orderId : string , user : "
 export const getOrders = async ({ user }: { user: "BUYER" | "SELLER" }): Promise<IGetOrders[]> => {
     const session = await getServerSession(authConfig)
 
-    if (!session) throw new Error("Unauthorized")
+    if (!session) {
+        console.error("Unauthorized")
+        redirect("/")    
+    }
     
     try {
         return await prisma.order.findMany({
@@ -142,7 +146,16 @@ export const getOrders = async ({ user }: { user: "BUYER" | "SELLER" }): Promise
                 : { seller: { userId: session.user.id } },
             include: {
                 package: true,
-                seller: true,
+                seller: {
+                    include : {
+                        user : {
+                            select : {
+                                name : true,
+                                username : true
+                            }
+                        }
+                    }
+                },
                 gig: true,
             },
         })

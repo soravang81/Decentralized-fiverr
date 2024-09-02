@@ -6,12 +6,14 @@ import { Container } from "@/components/container";
 import { Orders } from "@/components/sellerOrders";
 import Link from "next/link";
 import { StarIcon, TrendingUpIcon, DollarSignIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default async function SellerDashboard() {
   const session = await getServerSession(authConfig);
   
   if (!session) {
-    return null;
+    console.log("Unauthorised")
+    redirect("/")
   }
   
   const sellerProfileData = await getSellerProfile(session?.user.id)

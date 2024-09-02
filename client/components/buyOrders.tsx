@@ -1,5 +1,5 @@
 "use client"
-import { PricingPackage } from "@prisma/client"
+import { PricingPackage, SellerProfile, User } from "@prisma/client"
 import { Button } from "./ui/button"
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet"
 import { useEffect, useState } from "react"
@@ -7,11 +7,14 @@ import { Card , CardContent , CardFooter , CardHeader , CardTitle} from "./ui/ca
 import { createOrder, replyOrder } from "@/app/actions/buyer/orders"
 import { toast } from "sonner"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogOverlay, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog"
+import useSendEmail from "@/lib/hooks"
+import { IGigExtended } from "@/app/gig/[id]/page"
 
-export const BuyOrders = ({pkg , walletAddress , sellerId }:{pkg : PricingPackage , sellerId : string,walletAddress : string}) => {
+export const BuyOrders = ({pkg , seller , sellerId }:{pkg : PricingPackage , sellerId : string,seller : IGigExtended["seller"]}) => {
     const { gigId, name, description, price, deliveryTime } = pkg
     const [quantity, setQuantity] = useState(1)
     const [total, setTotal] = useState(price)
+    const {sendEmail , loading , error} = useSendEmail()
 
     // console.log(sellerId)
     const increaseQty = () => {
@@ -36,7 +39,12 @@ export const BuyOrders = ({pkg , walletAddress , sellerId }:{pkg : PricingPackag
               deadline: new Date(Date.now() + pkg.deliveryTime * 24 * 60 * 60 * 1000),
             }
         })
-        if(res){
+        if(res){ 
+            await sendEmail({
+                to : seller.user.username,
+                subject : "New Order approval request",
+                text : `Hello ${seller.user.name} ! \n\nYou have a new order request waiting to get your approval.\n\nRegards DFiverr.\n\nYou can check your orders from here https://dfiverr.skillcode.website/orders`
+            })
             toast.success("Order created successfully. !")
         } else {
             toast.error("Order creation failed. !"+res)

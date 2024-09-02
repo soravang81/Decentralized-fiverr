@@ -11,6 +11,12 @@ import { BuyOrders } from "@/components/buyOrders";
 export interface IGigExtended extends IGetGigs {
     createdAt : Date ;
     updatedAt : Date ;
+    seller : IGetGigs["seller"] & {
+        user : {
+            username : string
+            name : string | null
+        }
+    }
 }
 export default async function GigPageContent({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -100,7 +106,7 @@ export default async function GigPageContent({ params }: { params: { id: string 
                     {pkg.features.map((feature, index) => <li className="font-semibold" key={index}><span>{index + 1}. </span>{feature}</li>)}
                   </ol>
                 </div>
-                {pkg && seller.wallet && <BuyOrders pkg={pkg} sellerId={gigData.seller.id} walletAddress={seller.wallet}/>}
+                {pkg && seller.wallet && <BuyOrders pkg={pkg} seller={gigData.seller} sellerId={gigData.seller.id} />}
               </div>
             </TabsContent>
           ))}

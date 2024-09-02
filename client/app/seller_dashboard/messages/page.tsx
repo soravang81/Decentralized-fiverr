@@ -1,8 +1,9 @@
 "use client"
+import { pusher } from "@/app/actions/messaging/pusher";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Messages () {
 
@@ -14,6 +15,11 @@ export default function Messages () {
     const [newMessage, setNewMessage] = useState("");
 
 
+    // useEffect(()=>{
+    //     pusher.trigger("jane", "new-message", {
+    //         msg : "hello world"
+    //     })
+    // })
     const handleSubmit = (e:any) => {
         e.preventDefault();
 
@@ -26,7 +32,7 @@ export default function Messages () {
         setMessages([...messages, newMessageObject]);
         setNewMessage("");
     };
-
+    if(true) return <h1 className="text-3xl font-bold">Coming Soon...</h1>
     return (
         <div className="container py-20">
             <div className="flex flex-col justify-between">

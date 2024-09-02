@@ -16,11 +16,13 @@ import { getOwnerSecretKey } from "@/app/actions/others/utils";
 import { createTransaction } from "@/app/actions/others/transaction";
 import { Order } from "@prisma/client";
 import { IGetOrders } from "@/lib/types";
+import useSendEmail from "@/lib/hooks";
 
 export const CancelOrder = ({order, buyer, seller}:{order: IGetOrders, buyer?: boolean, seller?: boolean}) => {
     const [orders,setOrders] = useRecoilState(Orders)
     const { connection } = useConnection();
     const { publicKey } = useWallet();
+    const {sendEmail} = useSendEmail()
     const sellerAddress = order.seller.wallet
     const PROGRAM_ID = new PublicKey("53f9PzxmMi2ztWzTvM1pNgJXhhxyuPNCMNk6y9DPfELZ");
 
@@ -111,6 +113,11 @@ export const CancelOrder = ({order, buyer, seller}:{order: IGetOrders, buyer?: b
                     toAddress : publicKey.toString(),
                     purpose : "ESCROW_TO_BUYER_REFUND",
                     currency : "SOL",
+                  })
+                  await sendEmail({
+                    to : buyer ? order.buyer.username : order.seller.user.username ,
+                    subject : "Order Cancelled",
+                    text : `Hi ${buyer ? order.buyer.name : order.seller.user.name},\n\nYour recent order has been cancelled by ${buyer ? "the buyer ${order.buyer.name}" : "the seller ${order.seller.user.name}"}.\n\nRegards DFiverr.\n\nYou can check your orders from here https://dfiverr.skillcode.website/orders`,
                   })
                   toast.success("Order Cancelled Successfully, your money will be refunded!");
                   // TODO : send mail to the freelancer that the order has been cancelled !

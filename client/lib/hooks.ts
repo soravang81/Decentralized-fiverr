@@ -1,59 +1,43 @@
-// import { useState, useEffect, useCallback } from "react";
-// import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-// import { toast } from "sonner";
+import { EmailService } from '@/app/actions/others/utils';
+import { useState } from 'react';
 
-// export const useWallet = () => {
-//   const [wallet, setWallet] = useState<PhantomWalletAdapter | null>(null);
-//   const [publicKey, setPublicKey] = useState<string | null>(null);
+export interface EmailData {
+  to: string;
+  subject: string;
+  text?: string;
+  html?: string;
+}
 
-//   useEffect(() => {
-//     const loadWallet = async () => {
-//       try {
-//         const phantomWallet = new PhantomWalletAdapter();
-//         setWallet(phantomWallet);
-//       } catch (err) {
-//         console.error("Failed to initialize wallet:", err);
-//         toast.error("Failed to initialize wallet. Is Phantom installed?"+err)
-//     }
-//     };
+export interface SendEmailResult {
+  success: boolean;
+  message: string;
+}
 
-//     loadWallet();
-//   }, []);
+const useSendEmail = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-//   const connectWallet = useCallback(async () => {
-//     if (wallet) {
-//       try {
-//         await wallet.connect();
-//         const pubKey = wallet.publicKey;
-//         if (pubKey) {
-//           console.log(pubKey.toString())
-//           setPublicKey(pubKey.toString());
-//         }
-//       } catch (err:any) {
-//         console.error(err);
-//         toast.error(err.toString())
-//     }
-//     } else {
-//       toast.error("Wallet not initialized. Please refresh the page.");
-//     }
-//   }, [wallet]);
+  const sendEmail = async (emailData: EmailData): Promise<SendEmailResult> => {
+    setLoading(true);
+    setError(null);
 
-//   const disconnectWallet = useCallback(async () => {
-//     if (wallet) {
-//       try {
-//         await wallet.disconnect();
-//         setPublicKey(null);
-//         console.log("disconnectWallet")
-        
-//         // Re-initialize the wallet adapter to force a fresh connection next time
-//         const newWallet = new PhantomWalletAdapter();
-//         setWallet(newWallet);
-//       } catch (err) {
-//         console.error("Failed to disconnect wallet:", err);
-//         toast.error("Failed to disconnect wallet !"+err)
-//     }
-//     }
-//   }, [wallet]);
+    try {
+      const response = await EmailService(emailData);
 
-//   return { wallet, publicKey , connectWallet, disconnectWallet };
-// };
+      if (!response) {
+        throw new Error('Failed to send email');
+      }
+
+      setLoading(false);
+      return { success: true, message: "Email sent succesfully !" };
+    } catch (err:any) {
+      setLoading(false);
+      setError(err.message);
+      return { success: false, message: err.message };
+    }
+  };
+
+  return { sendEmail, loading, error };
+};
+
+export default useSendEmail;

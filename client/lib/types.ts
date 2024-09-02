@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 // import { Category, Niche, SubNiche } from "./niches";
-import { EscrowStatus, EscrowUsers, GigStatus, SellerProfile ,Category, Niche, SubNiche, PricingPackage, Gig, OrderStatus, PaymentStatus } from "@prisma/client";
+import { EscrowStatus, EscrowUsers, GigStatus, SellerProfile ,Category, Niche, SubNiche, PricingPackage, Gig, OrderStatus, PaymentStatus, User } from "@prisma/client";
 
 // Enums
 export enum UserRole {
@@ -24,7 +24,14 @@ export interface IGetOrders {
   status : OrderStatus,
   package : PricingPackage
   paymentStatus : PaymentStatus,
-  seller : SellerProfile
+  buyer : {
+    name : string | null,
+    username : string
+  }
+  seller : SellerProfile & {user : {
+    username : string,
+    name : string | null
+  }}
   gig : Gig
 }
 export interface CreateEscrowParams {
@@ -145,7 +152,7 @@ export interface IGetGigs {
   category: Category,
   niche: Niche,
   subNiche: SubNiche,
-  seller : SellerProfile,
+  seller : SellerProfile ,
   pricing : PricingPackage[]
   tags: string[],
 }

@@ -6,11 +6,13 @@ import { authConfig } from "@/lib/auth";
 import { PlusCircle } from "lucide-react";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function SellerGIgs() {
   const session = await getServerSession(authConfig)
   if (!session) {
-    return null
+    console.log("Unauthorised")
+    redirect("/")
   }
   const res = await getSellerGigs(session?.user.id)
 

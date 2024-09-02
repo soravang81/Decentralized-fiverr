@@ -73,7 +73,16 @@ export const getGig = async (id: string): Promise<IGigExtended | null> => {
                 category: true,
                 niche: true,
                 subNiche: true,
-                seller : true,
+                seller : {
+                    include : {
+                        user : {
+                            select : {
+                                username : true,
+                                name : true
+                            }
+                        }
+                    }
+                },
                 pricing : true,
                 createdAt : true,
                 updatedAt : true,

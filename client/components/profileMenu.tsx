@@ -17,9 +17,6 @@ import { toast } from "sonner";
 
 export function ProfileMenu({session, }:{session : Session }) {
   const role = useRole()
-  const [isDialogOpen, setIsDialogOpen] = useRecoilState(isDialog);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedAction, setSelectedAction] = useState("");
   const img = useUserImage();
   const [currentrole, setCurrentRole] = useRecoilState<UserRole>(currentRole);
   const latestRole = useRole()
@@ -100,7 +97,7 @@ export function ProfileMenu({session, }:{session : Session }) {
 {/* ==================== */}
           <DropdownMenuSeparator />
           <DropdownMenuItem className="p-0">
-              <Button variant="ghost" onClick={async()=>{window.location.href = "/";await signOut();}} className="w-full h-full flex gap-3 justify-start">
+              <Button variant="ghost" onClick={async()=>{await signOut(); }} className="w-full h-full flex gap-3 justify-start">
               <LogOut size={22} />
               Logout
             </Button>
