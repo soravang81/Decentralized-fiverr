@@ -140,12 +140,18 @@ export const getOrders = async ({ user }: { user: "BUYER" | "SELLER" }): Promise
     }
     
     try {
-        return await prisma.order.findMany({
+        const res = await prisma.order.findMany({
             where: user === "BUYER" 
                 ? { buyerId: session.user.id }
                 : { seller: { userId: session.user.id } },
             include: {
                 package: true,
+                buyer : {
+                    select : {
+                        name : true,
+                        username : true
+                    }
+                },
                 seller: {
                     include : {
                         user : {
@@ -159,6 +165,8 @@ export const getOrders = async ({ user }: { user: "BUYER" | "SELLER" }): Promise
                 gig: true,
             },
         })
+        console.log(res)
+        return res
     } catch (e) {
         throw new Error("Error fetching orders: " + e)
     }

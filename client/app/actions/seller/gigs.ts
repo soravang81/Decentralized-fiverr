@@ -99,7 +99,7 @@ export const getGig = async (id: string): Promise<IGigExtended | null> => {
     }
 }
 
-export const getGigs = async (id?:string): Promise<{gigs: IGetGigs[] } | false> => {
+export const getGigs = async (id?:string): Promise<{gigs: Omit<IGetGigs,"buyer">[] } | false> => {
     const session = await getServerSession(authConfig);
     try {
         const gigs = await prisma.gig.findMany({
@@ -127,7 +127,7 @@ export const getGigs = async (id?:string): Promise<{gigs: IGetGigs[] } | false> 
                 pricing : true,
                 tags: true,
             },
-        });
+        })
         console.log(gigs)
         return {gigs}
     } catch (e) {

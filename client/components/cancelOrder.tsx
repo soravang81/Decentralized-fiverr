@@ -1,20 +1,18 @@
 "use client"
-import { Trash } from "lucide-react"
+
 import { toast } from "sonner"
 import { cancelOrder, getOrders } from "@/app/actions/buyer/orders";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
-import { useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { Orders } from "@/lib/recoil/atoms";
 import { Idl, Program, web3 } from "@project-serum/anchor";
 import idl from "@/lib/idl.json"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { Keypair, PublicKey, sendAndConfirmRawTransaction, sendAndConfirmTransaction, SystemProgram, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
+import { Keypair, PublicKey, sendAndConfirmRawTransaction, SystemProgram, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
 import { getEscrowAddress } from "@/app/actions/escrow/escrow";
 import { Button } from "./ui/button";
 import { getOwnerSecretKey } from "@/app/actions/others/utils";
 import { createTransaction } from "@/app/actions/others/transaction";
-import { Order } from "@prisma/client";
 import { IGetOrders } from "@/lib/types";
 import useSendEmail from "@/lib/hooks";
 

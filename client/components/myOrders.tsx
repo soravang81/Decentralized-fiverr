@@ -1,5 +1,5 @@
 "use client"
-import { getOrders, replyOrder } from "@/app/actions/buyer/orders"
+import { replyOrder } from "@/app/actions/buyer/orders"
 import { getTimeDifference } from "@/lib/utils"
 import { CancelOrder } from "./cancelOrder"
 import { useEffect, useState } from "react"
@@ -11,8 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import { Button } from "./ui/button"
 import InitializeEscrow from "./escrow"
 import RaiseDispute from "./raiseDispute"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogOverlay, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog"
-import { Info } from "lucide-react"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog"
+import { toast } from "sonner"
 
 export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
     const [orderz,setOrders] = useRecoilState(Orders)
@@ -58,19 +58,24 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
                                     <AlertDialogContent>
                                         <AlertDialogTitle>
                                             Cancel Order
-                                        </AlertDialogTitle>m
+                                        </AlertDialogTitle>
                                         <AlertDialogDescription>
                                             Are you sure you want to cancel this order?
                                         </AlertDialogDescription>
-                                        <AlertDialogCancel asChild>m
+                                        <AlertDialogCancel>
                                             <Button variant ="outline" className="w-full" >Cancel</Button>
                                         </AlertDialogCancel>
-                                        <AlertDialogAction asChild>
-                                            <Button variant="default" className="w-full" onClick={() => replyOrder({orderId : order.id , reply : "REJECT_BY_BUYER"})} >Confirm</Button>
+                                        <AlertDialogAction>
+                                            <Button variant="default" className="w-full" onClick={async () => {
+                                                await replyOrder({orderId : order.id , reply : "REJECT_BY_BUYER"})
+                                                toast.success("Order Cancelled Successfully");
+                                                setOrders(orders.filter(o => {
+                                                    if(o.id === order.id) return {...o,status : "CANCELLED_BY_BUYER"}
+                                                }))
+                                            }} >Confirm</Button>
                                         </AlertDialogAction>
                                     </AlertDialogContent>    
                                 </AlertDialog>
-                                {/* <RaiseDispute orderId={order.id}/> */}
                                  </> 
                                 } 
                                 {order.status === "PAYMENT_PENDING" && <InitializeEscrow order={order}/>}
