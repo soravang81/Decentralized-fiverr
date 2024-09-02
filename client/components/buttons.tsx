@@ -136,11 +136,13 @@ export const OrderButtons = ({orderId}:{orderId:string}) => {
     return <>
     <Button variant="outline" size="sm" onClick={ async () => {
       await replyOrder({orderId , reply : "ACCEPT"})
-      window.location.reload()
+      toast.success("Order Accepted Successfully")
+      // window.location.reload()
     }}>Accept</Button>
     <Button variant="outline" size="sm" onClick={ async () => {
       await replyOrder({orderId , reply : "REJECTED_BY_SELLER"})
-      window.location.reload()
+      toast.success("Order Rejected Successfully")
+      // window.location.reload()
     }}>Reject</Button>
     </>
 }

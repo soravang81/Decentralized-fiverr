@@ -94,12 +94,14 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
                             <p className="text-gray-700">{order.gig.description}</p>
                             <p className="text-gray-700">Quantity : {order.quantity}</p>
                         </div>
-                        <div className="flex flex-col min-w-fit">
-                            <p className="text-lg font-semibold">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>
+                        <div className="flex flex-col gap-2 justify-end min-w-fit">
+                            <div className="flex gap-2 items-center">
+                                <p className="text-lg font-semibold">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>
+                                <RaiseDispute orderId={order.id}/>
+                            
+                            </div>
                             <CancelOrder order={order} buyer />
-                            {order.status !== "COMPLETED_BY_BUYER" && <><MarkComplete order={order} client />
-                            <RaiseDispute orderId={order.id}/></>
-                            }
+                            {order.status !== "COMPLETED_BY_BUYER" && <><MarkComplete order={order} client /></>}
                             <p className="text-gray-700">{getTimeDifference(order.createdAt)}</p>
                             <p className="text-gray-700">Status : {order.status}</p>
                         </div>

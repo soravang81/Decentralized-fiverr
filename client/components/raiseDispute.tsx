@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 import { raiseDispute } from "@/app/actions/others/dispute";
 import { toast } from "sonner";
+import { Info } from "lucide-react";
 
 export default function RaiseDispute({
     orderId
@@ -28,7 +29,7 @@ export default function RaiseDispute({
     }
     return <Dialog>
         <DialogTrigger asChild>
-            <Button>Raise Dispute</Button>
+            <Button variant={"icon"} className="w-fit self-end"><Info/></Button>
         </DialogTrigger>
         <DialogContent>
             <DialogTitle>Raise Dispute</DialogTitle>
