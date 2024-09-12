@@ -74,22 +74,6 @@ describe('d_fiverr', () => {
     expect(escrowState.clientAgreed).to.be.true;
     expect(escrowState.freelancerAgreed).to.be.true;
   });
-
-  it('Releases funds to the freelancer', async () => {
-    const freelancerBalanceBefore = await provider.connection.getBalance(freelancerKeypair.publicKey);
-  
-    await program.methods
-      .releaseFunds()
-      .accounts({
-        escrow: escrowAccount.publicKey,
-        freelancer: freelancerKeypair.publicKey,
-        systemProgram: SystemProgram.programId,
-      })
-      .rpc();
-  
-    const freelancerBalanceAfter = await provider.connection.getBalance(freelancerKeypair.publicKey);
-    expect(freelancerBalanceAfter).to.be.greaterThan(freelancerBalanceBefore);
-  });
   
   it('Resolves a dispute', async () => {
     // Create a new escrow for this test

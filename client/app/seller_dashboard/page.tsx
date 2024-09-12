@@ -75,7 +75,7 @@ export default async function SellerDashboard() {
               <CardContent className="p-6">
                 <h3 className="font-semibold text-lg text-gray-800 mb-4">Quick Actions</h3>
                 <div className="space-y-3">
-                  <Link href="/create-gig" className="block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition duration-300 ease-in-out">
+                  <Link href="/gigs/create-gig" className="block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition duration-300 ease-in-out">
                     Create New Gig
                   </Link>
                   <Link href="/seller_dashboard/messages" className="block w-full text-center bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded transition duration-300 ease-in-out">
