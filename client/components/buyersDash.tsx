@@ -67,13 +67,13 @@ export const BuyersHomepage: React.FC<BuyersHomepageProps> = ({ session, gigs })
           icon={<SearchIcon className="w-8 h-8 text-purple-400" />}
           title="Browse Gigs"
           description="Explore talented freelancers"
-          link="/browse-gigs"
+          link="/dashboard"
         />
         <QuickActionCard
           icon={<ShoppingBagIcon className="w-8 h-8 text-green-400" />}
           title="My Orders"
           description="View your active and past orders"
-          link="/my-orders"
+          link="/orders"
         />
         <QuickActionCard
           icon={<MessageCircleIcon className="w-8 h-8 text-blue-400" />}
