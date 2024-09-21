@@ -17,7 +17,7 @@ export default async function SellerOrdersPage () {
 
    return <div className="container py-6">
       <Tabs defaultValue="pending" className="w-full">
-         <TabsList className="w-full bg-gray-200">
+         <TabsList className="w-full">
             <TabsTrigger value="pending" className="w-full">Pending</TabsTrigger>
             <TabsTrigger value="active" className="w-full">Active</TabsTrigger>
             <TabsTrigger value="cancelled" className="w-full">Cancelled</TabsTrigger>
@@ -26,7 +26,7 @@ export default async function SellerOrdersPage () {
          <TabsContent value="pending">
             <div className="flex flex-col gap-4 ">
                {pendingOrders.map(order => (
-                  <div key={order.id} className="bg-white p-4  rounded-lg border flex justify-between shadow-md">
+                  <div key={order.id} className=" p-4  rounded-lg border flex justify-between shadow-md">
                      <div className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p>
                         <section className="flex flex-col gap-1 ml-4">
@@ -49,7 +49,7 @@ export default async function SellerOrdersPage () {
          <TabsContent value="active">
             <div className="flex flex-col gap-4 ">
                {activeOrders.map(order => (
-                  <div key={order.id} className="bg-white px-8 p-4 rounded-lg flex justify-between border shadow-md">
+                  <div key={order.id} className=" px-8 p-4 rounded-lg flex justify-between border shadow-md">
                      <div className="flex flex-col">
                         <p className="text-lg font-semibold ">{order.gig.title}</p>
                         {/* TODO : Add go to profile (make a profile section first for both buyer and seller dash) */}
@@ -61,7 +61,6 @@ export default async function SellerOrdersPage () {
                      </div>
                      <div className="flex flex-col gap-2">                              
                         <p className="text-gray-700 text-lg">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>
-                        {/* <p className="text-gray-700 text-lg">${order.amount}</p> */}
                         <section className="flex gap-2">
                            <CancelOrder order={order} seller/>
                            {order.status !=="COMPLETED_BY_SELLER" && <MarkComplete order={order} freelancer/>}
@@ -76,7 +75,7 @@ export default async function SellerOrdersPage () {
          <TabsContent value="cancelled">
             <div className="flex flex-col gap-4 ">
                {cancelledOrders.map(order => (
-                  <div key={order.id} className="bg-white p-4  rounded-lg border flex justify-between shadow-md">
+                  <div key={order.id} className=" p-4  rounded-lg border flex justify-between shadow-md">
                      <section className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p> 
                         <p className="text-gray-500 ml-2">For : {order.seller.name}</p>
@@ -91,7 +90,7 @@ export default async function SellerOrdersPage () {
          <TabsContent value="delivered">
             <div className="flex flex-col gap-4 ">
                {deliveredOrders.map(order => (
-                  <div key={order.id} className="bg-white p-4  rounded-lg border flex justify-between shadow-md">
+                  <div key={order.id} className=" p-4  rounded-lg border flex justify-between shadow-md">
                      <section className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p> 
                         <p className="text-gray-500 ml-2">For : {order.seller.name}</p>

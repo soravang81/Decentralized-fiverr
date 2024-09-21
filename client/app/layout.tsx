@@ -7,6 +7,7 @@ import { getServerSession, Session } from "next-auth";
 import { authConfig } from "@/lib/auth";
 import { getLastRole } from "./actions/buyer/role";
 import { UserRole } from "@prisma/client";
+import { ThemeProvider } from 'next-themes';
 import { Suspense } from "react";
 import Loading from "./loading";
 

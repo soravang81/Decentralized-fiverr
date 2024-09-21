@@ -6,13 +6,13 @@ import { OrderStatus } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 
-export const createOrder = async({order}:{order:CreateOrderInput}) =>{
+export const createOrder = async({order}:{order:CreateOrderInput}) : Promise<string | Error> =>{
     const session = await getServerSession(authConfig)
     if (!session || !session.user.id) {
         throw new Error("Unauthorized");
     }
     try {
-        await prisma.order.create({
+        const res = await prisma.order.create({
             data : {
                 packageId : order.packageId,
                 gigId : order.gigId,
@@ -23,10 +23,10 @@ export const createOrder = async({order}:{order:CreateOrderInput}) =>{
                 deadline : order.deadline
             }
         })
-        return true
-    } catch (err) {
+        return res.id
+    } catch (err:any) {
         console.error(err)
-        return err
+        return err.toString()
     }
 }
 
@@ -69,12 +69,13 @@ export const createEscrowAndTransaction = async({orderId,escrow}:{orderId : stri
         return false
     }
 }
-export const replyOrder = async({orderId , reply , status}: {orderId : string , reply? : "ACCEPT" | "REJECT_BY_BUYER" | "REJECTED_BY_SELLER"  , status? : OrderStatus}) => {
+export const replyOrder = async({orderId , reply , status}: {orderId : string , reply : "ACCEPT" | "REJECT_BY_BUYER" | "REJECTED_BY_SELLER"  , status? : OrderStatus}) => {
     const session = await getServerSession(authConfig)
     if (!session || !session.user.id) {
         throw new Error("Unauthorized");
     }
     try {
+        console.error(orderId)
         await prisma.order.update({
             where : {
                 id : orderId

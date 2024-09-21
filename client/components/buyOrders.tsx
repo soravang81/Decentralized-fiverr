@@ -1,7 +1,7 @@
 "use client"
 import { PricingPackage, SellerProfile, User } from "@prisma/client"
 import { Button } from "./ui/button"
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet"
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetTrigger } from "./ui/sheet"
 import { useEffect, useState } from "react"
 import { Card , CardContent , CardFooter , CardHeader , CardTitle} from "./ui/card"
 import { createOrder, replyOrder } from "@/app/actions/buyer/orders"
@@ -9,14 +9,28 @@ import { toast } from "sonner"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogOverlay, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog"
 import useSendEmail from "@/lib/hooks"
 import { IGigExtended } from "@/app/gig/[id]/page"
+import { getSession } from "next-auth/react"
 
 export const BuyOrders = ({pkg , seller , sellerId }:{pkg : PricingPackage , sellerId : string,seller : IGigExtended["seller"]}) => {
     const { gigId, name, description, price, deliveryTime } = pkg
     const [quantity, setQuantity] = useState(1)
     const [total, setTotal] = useState(price)
+    const [specialButton , setSpecialButton] = useState(false);
     const {sendEmail , loading , error} = useSendEmail()
+    const [orderId , setOrderId] = useState("")
 
-    // console.log(sellerId)
+    const handleSpecialButtonClick = async () =>{
+        try {
+            console.log(orderId)
+            await replyOrder({
+                orderId,
+                reply : "ACCEPT"
+            })
+            toast.success("Order self Accepted !")
+        } catch {
+            toast.error("Failed to self accept order !")
+        }
+    }
     const increaseQty = () => {
         setQuantity(quantity + 1)
         setTotal(total + price)
@@ -29,6 +43,15 @@ export const BuyOrders = ({pkg , seller , sellerId }:{pkg : PricingPackage , sel
         }
     }
     const handleSubmit = async () => {
+        const session = await getSession()
+        if(!session) return toast.warning("Please login to continue !", {
+            action: {
+              label: 'signin',
+              onClick: () => window.location.href = "/login",
+            },
+          });
+          
+          
         const res = await createOrder({
             order: {
               packageId: pkg.id,
@@ -39,12 +62,16 @@ export const BuyOrders = ({pkg , seller , sellerId }:{pkg : PricingPackage , sel
               deadline: new Date(Date.now() + pkg.deliveryTime * 24 * 60 * 60 * 1000),
             }
         })
+        console.log(res)
         if(res){ 
+            setOrderId(res as string)
             await sendEmail({
                 to : seller.user.username,
                 subject : "New Order approval request",
                 text : `Hello ${seller.user.name} ! \n\nYou have a new order request waiting to get your approval.\n\nRegards DFiverr.\n\nYou can check your orders from here https://dfiverr.skillcode.website/orders`
             })
+            console.error(error , orderId)
+            setSpecialButton(true)
             toast.success("Order created successfully. !")
         } else {
             toast.error("Order creation failed. !"+res)
@@ -77,7 +104,7 @@ export const BuyOrders = ({pkg , seller , sellerId }:{pkg : PricingPackage , sel
                     <p className="text-lg font-semibold">Total: ${total}</p>
                     <p className="text-sm text-muted-foreground">Est. delivery: {deliveryTime} days</p>
                 </CardFooter>
-                <AlertDialog>
+                <AlertDialog>                
                     <AlertDialogTrigger asChild className="mt-2">
                         <Button variant="default" className="w-full" >Book Order</Button>
                     </AlertDialogTrigger>
@@ -98,6 +125,10 @@ export const BuyOrders = ({pkg , seller , sellerId }:{pkg : PricingPackage , sel
                     </AlertDialogContent>
                 </AlertDialog>
             </Card>}
+            <h1 className="muted text-gray-600 text-sm mt-10 px-4">* Your order will be approved first by the seller than u can pay for the order to get it started.<br/><br/>* You will be notified after your order is approved.</h1>
+            {specialButton && <section className="my-8 mx-2">
+                <p className="muted text-gray-600 text-sm">* This is a special button to approve the order yourself while the app is in beta/development phase</p>
+            <Button className="mt-4" onClick={handleSpecialButtonClick}>Appove Order</Button></section>}
         </SheetContent>
     </Sheet>
 }

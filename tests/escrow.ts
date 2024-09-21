@@ -76,14 +76,12 @@ describe('d_fiverr', () => {
   });
   
   it('Resolves a dispute', async () => {
-    // Create a new escrow for this test
     const disputeEscrowAccount = Keypair.generate();
     
     // Airdrop more SOL to the client
     await provider.connection.requestAirdrop(clientKeypair.publicKey, 2_000_000_000);
     await provider.connection.confirmTransaction(await provider.connection.requestAirdrop(clientKeypair.publicKey, 2_000_000_000));
   
-    // Use a smaller amount for this test
     const disputeEscrowAmount = new anchor.BN(100_000_000); // 0.1 SOL
   
     await program.methods

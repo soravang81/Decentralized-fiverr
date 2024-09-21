@@ -104,7 +104,9 @@ export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
         router.refresh()
       }
       else {
-        router.replace("/seller_dashboard/gigs/create-pricing");
+        localStorage.setItem('gigFormData', JSON.stringify(gigData));
+        localStorage.setItem('gigImagePreview', imagePreview || '');
+        router.push("/seller_dashboard/gigs/create-pricing");
       }
     } catch (error) {
       console.error("Error submitting gig:", error);
@@ -122,12 +124,12 @@ export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
     disabled: boolean = false
   ) => (
     <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium text-gray-700">{label}</label>
+      <label htmlFor={id} className="text-sm font-medium ">{label}</label>
       <select
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="w-full rounded-md border border-gray-300  py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
         disabled={disabled}
       >
         <option value="">{placeholder}</option>
@@ -144,11 +146,11 @@ export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
   )
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 text-foreground">
       <h1 className="text-2xl font-bold mb-4">{!gig ? "Create new gig" : "Update gig"}</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <label htmlFor="title" className="text-sm font-medium text-gray-700">Title</label>
+          <label htmlFor="title" className="text-sm font-medium ">Title</label>
           <input
             type="text"
             id="title"
@@ -156,26 +158,26 @@ export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
             placeholder="i will ..."
             value={formData.title}
             onChange={handleInputChange}
-            className="w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300  py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             required
           />
         </div>
         <div className="space-y-2">
-          <label htmlFor="description" className="text-sm font-medium text-gray-700">Description</label>
+          <label htmlFor="description" className="text-sm font-medium ">Description</label>
           <textarea
             id="description"
             name="description"
             value={formData.description}
             onChange={handleInputChange}
             rows={3}
-            className="w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300  py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             required
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Gig Image</label>
+          <label className="text-sm font-medium ">Gig Image</label>
           <div className={`flex items-center ${gig ? "justify-center" : "justify-start"} w-full`}>
-            <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-96 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+            <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-96 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer ">
               {imagePreview ? (
                 <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
               ) : (
@@ -213,13 +215,13 @@ export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
               type="button"
               onClick={handleAddSubNiche}
               disabled={!currentSubNiche}
-              className="px-4 py-2 bg-blue-500 self-end text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-blue-500 self-end  rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Set
             </button>
           </div>
           {formData.subNiche && (
-            <div className="bg-gray-200 px-2 py-1 rounded-full inline-flex items-center">
+            <div className="border px-2 py-1 rounded-full inline-flex items-center">
               <span>{SubNicheReadable[formData.subNiche as keyof typeof SubNicheReadable]}</span>
               <button
                 type="button"
@@ -232,20 +234,20 @@ export const CreateGig = ({ gig }: { gig?: IGetGigs }) => {
           )}
         </div>
         <div className="space-y-2">
-          <label htmlFor="tags" className="text-sm font-medium text-gray-700">Tags</label>
+          <label htmlFor="tags" className="text-sm font-medium ">Tags</label>
           <input
             type="text"
             id="tags"
             name="tags"
             value={formData.tags.join(', ')}
             onChange={handleInputChange}
-            className="w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300  py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             placeholder="Separate tags with commas"
           />
         </div>
         <Button
           type={"submit"}
-          className="w-full px-4 py-2 text-white "
+          className="w-full px-4 py-2  "
         >
           {gig ? "Update" : "Continue"}
         </Button>

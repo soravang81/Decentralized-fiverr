@@ -121,9 +121,20 @@ export const getGigs = async (id?:string): Promise<{gigs: Omit<IGetGigs,"buyer">
                 status: true,
                 picture: true,
                 category: true,
+                createdAt: true,
+                updatedAt: true,
                 niche: true,
                 subNiche: true,
-                seller : true,
+                seller : {
+                    include : {
+                        user : {
+                            select : {
+                                username : true,
+                                name : true
+                            }
+                        }
+                    }
+                },
                 pricing : true,
                 tags: true,
             },
@@ -158,9 +169,20 @@ export const getSellerGigs = async (id:string): Promise<{gigs: IGetGigs[] } | fa
                 status: true,
                 picture: true,
                 category: true,
+                createdAt: true,
+                updatedAt: true,
                 niche: true,
                 subNiche: true,
-                seller : true,
+                seller : {
+                    include : {
+                        user : {
+                            select : {
+                                username : true,
+                                name : true
+                            }
+                        }
+                    }
+                },
                 pricing : true,
                 tags: true,
             },

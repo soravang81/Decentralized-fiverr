@@ -15,7 +15,7 @@ import { getOwnerSecretKey } from "@/app/actions/others/utils";
 import { createTransaction } from "@/app/actions/others/transaction";
 import { IGetOrders } from "@/lib/types";
 import useSendEmail from "@/lib/hooks";
-
+cancelOrder
 export const CancelOrder = ({order, buyer, seller}:{order: IGetOrders, buyer?: boolean, seller?: boolean}) => {
     const [orders,setOrders] = useRecoilState(Orders)
     const { connection } = useConnection();
@@ -34,7 +34,6 @@ export const CancelOrder = ({order, buyer, seller}:{order: IGetOrders, buyer?: b
         const secretKeyArray = await getOwnerSecretKey();
         const ownerKeys = Keypair.fromSecretKey(Uint8Array.from(secretKeyArray));
     
-        // Verify that ownerKeys.publicKey matches the expected owner
         console.log("Owner public key:", ownerKeys.publicKey.toBase58());
     
         const program = new Program(idl as Idl, PROGRAM_ID, {
@@ -45,7 +44,6 @@ export const CancelOrder = ({order, buyer, seller}:{order: IGetOrders, buyer?: b
         const escrowAddress = await getEscrowAddress(order.id);
         console.log("Escrow address:", escrowAddress);
     
-        // Fetch and log the escrow account data
         const escrowAccount = await program.account.escrow.fetch(escrowAddress as string);
         console.log("Escrow account owner:", (escrowAccount as any).owner.toBase58());
     
@@ -75,10 +73,8 @@ export const CancelOrder = ({order, buyer, seller}:{order: IGetOrders, buyer?: b
           const transaction = new VersionedTransaction(messageV0);
           console.log("Transaction before signing:", transaction);
       
-          // Sign the transaction
           transaction.sign([ownerKeys]);
       
-          // Send and confirm the transaction
           const rawTransaction = transaction.serialize();
             const txid = await sendAndConfirmRawTransaction(
             connection,
@@ -90,7 +86,6 @@ export const CancelOrder = ({order, buyer, seller}:{order: IGetOrders, buyer?: b
             );
             console.log("Transaction sent:", txid);
 
-            // Wait for confirmation
             await connection.confirmTransaction(txid);
 
             const txDetails = await connection.getTransaction(txid, {

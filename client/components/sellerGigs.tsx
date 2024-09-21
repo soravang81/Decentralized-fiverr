@@ -28,7 +28,7 @@ export const GigList = ({ gigs }: { gigs: IGetGigs[] }) => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container bg-background/40 rounded-xl mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Your Gigs</h2>
         <Button
@@ -46,7 +46,7 @@ export const GigList = ({ gigs }: { gigs: IGetGigs[] }) => {
       </div>
       <div className="space-y-4 overflow-y-auto p-4">
         {gigs.map((gig) => (
-          <div key={gig.id} className="bg-white rounded-lg shadow-md border overflow-hidden flex">
+          <div key={gig.id} className=" rounded-lg shadow-md border overflow-hidden flex">
             <div className="px-6 flex-grow flex items-center justify-between">
               <div className="flex items-center p-4 gap-6">
                 <input
@@ -67,7 +67,7 @@ export const GigList = ({ gigs }: { gigs: IGetGigs[] }) => {
               <Dialog>
                 <DialogTrigger asChild>
                   <Button
-                     className="text-white px-3 py-1 rounded"
+                     className=" px-3 py-1 rounded"
                     onClick={() => setEditingGig(gig)}
                   >
                     Edit

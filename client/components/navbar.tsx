@@ -1,4 +1,6 @@
-// "use client"
+"use client"
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { ProfileMenu } from "./profileMenu";
 import { LoginButton, RoleToggleButton } from "./buttons";
 const CustomWalletMultiButton = dynamic(() => import('@/components/buttons'),{ ssr: false });
@@ -8,28 +10,61 @@ import dynamic from "next/dynamic";
 import { BuyerNavbar, SellerNavbar } from "./roleBasedNavbar";
 
 export const Navbar = ({session}:{session:Session | null}) => {
+    const [isScrolled, setIsScrolled] = useState(false)
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50)
+        }
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
     return (
-        <div className="max-w-screen border shadow-md text-4xl xl:px-48 lf:px-36 md:px-20 sm:px-6 px-3  py-2 flex justify-between items-center">
-            <section className="flex items-center">
-                <Link href={"/dashboard"} className="p-0"><span className="font-bold">DFiverr</span></Link>
-                <NavbarSections session={session}/>
-            </section>
-            <section className="flex justify-between gap-4 items-center">
-                {session && <>
-                    <CustomWalletMultiButton/> 
-                    {session && <ProfileMenu session={session}  />}
-                </>}
-                <LoginButton session={session}/>
-            </section>  
-        </div>
+        <motion.header 
+            className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b ${
+                isScrolled ? 'bg-black bg-opacity-80 backdrop-filter backdrop-blur-lg' : 'bg-transparent'
+            }`}
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
+            <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
+                <section className="flex items-center">
+                    <Link href={"/dashboard"}>
+                        <motion.span 
+                            className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600"
+                            whileHover={{ scale: 1.05 }}
+                        >
+                            DFiverr
+                        </motion.span>
+                    </Link>
+                    <NavbarSections session={session}/>
+                </section>
+                <section className="flex justify-between gap-4 items-center">
+                    {session ? (
+                        <>
+                            <CustomWalletMultiButton/> 
+                            <ProfileMenu session={session} />
+                        </>
+                    ) : (
+                        <LoginButton session={session}/>
+                    )}
+                </section>  
+            </nav>
+        </motion.header>
     )
 }
 
 export const NavbarSections = ({session}:{session:Session | null}) => {
-    return <>
-        {session &&<div className="hidden md:flex md:visible gap-4 ml-10">
-            <SellerNavbar/>
-            <BuyerNavbar/>
-        </div>}
-    </>
+    return (
+        <>
+            {session && (
+                <div className="hidden md:flex md:visible gap-4 ml-10">
+                    <SellerNavbar/>
+                    <BuyerNavbar/>
+                </div>
+            )}
+        </>
+    )
 }

@@ -36,7 +36,7 @@ export default async function GigPageContent({ params }: { params: { id: string 
 } = gigData;
 
   return (
-    <div className="container py-10 flex lg:flex-row flex-col gap-10">
+    <div className="container py-10 flex lg:flex-row flex-col gap-10 pt-28">
       <div className="w-full h-full pr-10 flex flex-col gap-10">
         <h1 className="text-3xl font-bold mb-4 ">{title}</h1>
 
@@ -56,7 +56,7 @@ export default async function GigPageContent({ params }: { params: { id: string 
               <h2 className="text-2xl font-semibold mb-2">Tags</h2>
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag, index) => (
-                  <span key={index} className="bg-gray-200 rounded-full px-3 py-1 text-sm">
+                  <span key={index} className="rounded-full border-foreground border px-3 py-1 text-sm">
                     {tag}
                   </span>
                 ))}
@@ -96,14 +96,14 @@ export default async function GigPageContent({ params }: { params: { id: string 
 
           {pricing.map((pkg, index) => (
             <TabsContent key={index} value={pkg.name} className="">
-              <div className="border rounded-lg p-6 mb-4">
+              <div className=" rounded-lg p-6 mb-4">
                 <h3 className="font-semibold text-2xl p-1">{pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1)}</h3>
                 <p className="p-1">{pkg.description}</p>
                 <p className="font-bold mt-2 text-xl p-1">${pkg.price}</p>
                 <p className="text-lg p-1">Delivery in {pkg.deliveryTime} days</p>
                 <div className="flex flex-col gap-2 ml-2">
                   <ol className="p-1 mb-2">
-                    {pkg.features.map((feature, index) => <li className="font-semibold" key={index}><span>{index + 1}. </span>{feature}</li>)}
+                    {pkg.features.map((feature, index) => <li className="font-semibold" key={index}><span> </span>{feature}</li>)}
                   </ol>
                 </div>
                 {pkg && seller.wallet && <BuyOrders pkg={pkg} seller={gigData.seller} sellerId={gigData.seller.id} />}

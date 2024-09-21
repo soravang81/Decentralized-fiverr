@@ -130,10 +130,9 @@ const InitializeEscrow = ({order }:{order : IGetOrders } ) => {
   </AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
-      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+      <AlertDialogTitle>Are you absolutely sure you want to pay?</AlertDialogTitle>
       <AlertDialogDescription>
-        This action cannot be undone. This will permanently delete your
-        account and remove your data from our servers.
+        An escrow contract will be created and funded with the amount specified. The freelancer will have access to the funds only after they complete the task.<br/><br/>Both of you have to agree that the work is completed by signing a transaction
       </AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>

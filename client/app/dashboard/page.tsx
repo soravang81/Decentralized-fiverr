@@ -1,19 +1,31 @@
-import { authConfig } from "@/lib/auth";
-import { getServerSession } from "next-auth";
-import { getLastRole } from "../actions/buyer/role";
-import { redirect } from "next/navigation";
-import { BuyersHomepage } from "@/components/buyersDash";
+import { authConfig } from "@/lib/auth"
+import { getServerSession } from "next-auth"
+import { getLastRole } from "../actions/buyer/role"
+import { redirect } from "next/navigation"
+import { BuyersHomepage } from "@/components/buyersDash"
+import { Navbar } from '@/components/navbar'
+import { getGigs } from '@/app/actions/seller/gigs'
 
-export default async function BuyersDashboard () {
-const session = await getServerSession(authConfig)
-  // if (!session) return
+export default async function BuyersDashboard() {
+	const session = await getServerSession(authConfig)
+	// if (!session) {
+	// 	redirect("/login")
+	// }
 
-  const lastRole = session?.user.id ? await getLastRole(session?.user.id) : console.log("Role not found")
-  if (lastRole === "SELLER") {
-    redirect("/seller_dashboard")
-  }
+	const lastRole = session?.user.id ? await getLastRole(session?.user.id) : null
+	if (lastRole === "SELLER") {
+		redirect("/seller_dashboard")
+	}
 
-  return <>
-    <BuyersHomepage session={session}/> 
-  </>
+	const gigsResult = await getGigs()
+  if (!gigsResult) return null
+
+	return (
+		<div className="min-h-screen bg-gradient-to-b from-purple-900 to-black text-white">
+				{/* <Navbar session={session} /> */}
+				<main className="pt-20">
+					<BuyersHomepage session={session} gigs={gigsResult?.gigs || []} />
+				</main>
+		</div>
+	)
 }

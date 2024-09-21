@@ -22,7 +22,7 @@ export default async function SellerGIgs() {
     <div className="flex justify-between">
         <h1 className="text-4xl">Gigs</h1>
         <Link href={`/seller_dashboard/gigs/create-gig`}>
-          <Button className="flex items-center gap-2 px-4 py-2 text-white">
+          <Button className="flex items-center gap-2 px-4 py-2">
             <PlusCircle size={20} />
             Create New Gig
           </Button>

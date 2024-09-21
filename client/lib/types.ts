@@ -89,7 +89,7 @@ export interface CreateGigInput {
   title: string;
   description: string;
   category: Category;
-  picture: string;
+  picture: string | null;
   niche: Niche;
   subNiche: SubNiche;
   revisions?: number;
@@ -148,11 +148,16 @@ export interface IGetGigs {
   sellerId: string,
   description: string,
   status: GigStatus,
+  createdAt: Date,
+  updatedAt: Date,
   picture: string | null,
   category: Category,
   niche: Niche,
   subNiche: SubNiche,
-  seller : SellerProfile ,
+  seller : SellerProfile & {user : {
+    username : string,
+    name : string | null
+  }},
   pricing : PricingPackage[]
   tags: string[],
 }

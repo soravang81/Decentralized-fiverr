@@ -5,6 +5,7 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from "@solana/web3.js";
 import {SessionProvider} from "next-auth/react"
+import { ThemeProvider } from "next-themes";
 import { ReactNode, useMemo } from "react";
 import { RecoilRoot } from "recoil";
 import { Toaster } from "sonner";
@@ -24,9 +25,11 @@ function Providers({ children}:{children : ReactNode}) {
   );
 
     return (
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+
         <SessionProvider>
           <RecoilRoot>
-            <Toaster expand position="top-right" offset={3} duration={3000}/>
+            <Toaster expand position="top-right" offset={3} duration={7000}/>
             <ConnectionProvider endpoint={endpoint}>
               <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
@@ -36,6 +39,8 @@ function Providers({ children}:{children : ReactNode}) {
             </ConnectionProvider>
           </RecoilRoot>
         </SessionProvider>
+        </ThemeProvider>
+
     );
    }
    
