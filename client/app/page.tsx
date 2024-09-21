@@ -286,7 +286,7 @@ function SocialIcon({ href, Icon }: { href: string, Icon: React.ElementType }) {
     </a>
   )
 }
-export const MailIcon = (props: React.SVGProps<SVGSVGElement>) => {
+function MailIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
