@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform, useSpring, useAnimation } from 'framer
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-import { GlobeIcon, CodeIcon, PaletteIcon, MessageCircleIcon, DollarSignIcon, ShieldIcon } from 'lucide-react'
+import { GlobeIcon, CodeIcon, PaletteIcon, MessageCircleIcon, DollarSignIcon, ShieldIcon, Mail } from 'lucide-react'
 import { ReactNode } from 'react'
 import { Navbar } from '@/components/navbar'
 import { useSession } from 'next-auth/react'
@@ -248,12 +248,12 @@ function Footer() {
           <FooterLink href="#">About</FooterLink>
           <FooterLink href="#">Terms</FooterLink>
           <FooterLink href="#">Privacy</FooterLink>
-          <FooterLink href="#">Contact</FooterLink>
+          <FooterLink href="mailto:souravangral18@gmail.com">Contact</FooterLink>
         </nav>
         <div className="flex space-x-4">
-          <SocialIcon href="#" Icon={TwitterIcon} />
-          <SocialIcon href="#" Icon={GithubIcon} />
-          <SocialIcon href="#" Icon={DiscordIcon} />
+          <SocialIcon href="https://twitter.com/sourxv_me" Icon={TwitterIcon} />
+          <SocialIcon href="https://github.com/soravang81" Icon={GithubIcon} />
+          <SocialIcon href="mailto:souravangral18@gmail.com" Icon={MailIcon} />
         </div>
       </div>
       <div className="text-center mt-8 text-sm text-purple-400">
@@ -286,7 +286,24 @@ function SocialIcon({ href, Icon }: { href: string, Icon: React.ElementType }) {
     </a>
   )
 }
-
+export const MailIcon = (props: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+    </svg>
+  )
+}
 function TwitterIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
