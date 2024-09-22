@@ -77,11 +77,11 @@ export default function EnhancedFeedback() {
         >
           <Card 
             onClick={() => setIsOpen(true)}
-            className="bg-purple-800 bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 cursor-pointer transform hover:scale-105">
+            className="bg-gray-900 hover:bg-opacity-70 transition-all duration-300 cursor-pointer transform hover:scale-105">
           <CardContent className="p-6 flex flex-col items-center text-center">
             <StarIcon className="w-8 h-8 text-yellow-400" />
-            <h3 className="text-xl font-semibold mt-4 mb-2 text-purple-200">Leave Feedback</h3>
-            <p className="text-purple-300">Rate your completed orders</p>
+            <h3 className="text-xl font-semibold mt-4 mb-2 ">Leave Feedback</h3>
+            <p className="">Rate your completed orders</p>
           </CardContent>
         </Card>
         </motion.div>

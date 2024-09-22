@@ -56,7 +56,7 @@ export const BuyersHomepage: React.FC<BuyersHomepageProps> = ({ session, gigs })
       animate="visible"
     >
       <motion.h1 
-        className="text-4xl font-bold mb-8 text-purple-300"
+        className="text-4xl font-bold mb-8 text-gray-200"
         variants={itemVariants}
       >
         {welcomeMessage}
@@ -67,13 +67,13 @@ export const BuyersHomepage: React.FC<BuyersHomepageProps> = ({ session, gigs })
         variants={itemVariants}
       >
         <QuickActionCard
-          icon={<SearchIcon className="w-8 h-8 text-purple-400" />}
+          icon={<SearchIcon className="w-8 h-8 text-green-400" />}
           title="Browse Gigs"
           description="Explore talented freelancers"
           link='/dashboard'
         />
         <QuickActionCard
-          icon={<ShoppingBagIcon className="w-8 h-8 text-green-400" />}
+          icon={<ShoppingBagIcon className="w-8 h-8 text-red-400" />}
           title="My Orders"
           description="View your active and past orders"
           link="/orders"
@@ -90,9 +90,9 @@ export const BuyersHomepage: React.FC<BuyersHomepageProps> = ({ session, gigs })
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Card className="bg-background/30 bg-opacity-50 shadow-lg">
+        <Card className="bg-gray-900 shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-purple-300">Explore Gigs</CardTitle>
+            <CardTitle className="text-2xl font-bold text-gray-200">Explore Gigs</CardTitle>
           </CardHeader>
           <CardContent>
             <BuyerGigs gigs={gigs} />
@@ -105,11 +105,11 @@ export const BuyersHomepage: React.FC<BuyersHomepageProps> = ({ session, gigs })
 
 const QuickActionCard: React.FC<QuickActionCardProps> = ({ icon, title, description, link , onClick}) => {
   return  <Link href={link ?? "#"} onClick={onClick}>
-    <Card className="bg-purple-800 bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 cursor-pointer transform hover:scale-105">
+    <Card className="bg-gray-900 hover:bg-opacity-70 transition-all duration-300 cursor-pointer transform hover:scale-105">
       <CardContent className="p-6 flex flex-col items-center text-center">
         {icon}
-        <h3 className="text-xl font-semibold mt-4 mb-2 text-purple-200">{title}</h3>
-        <p className="text-purple-300">{description}</p>
+        <h3 className="text-xl font-semibold mt-4 mb-2 text-gray-200">{title}</h3>
+        <p className="text-gray-300">{description}</p>
       </CardContent>
     </Card>
   </Link>

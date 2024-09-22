@@ -21,7 +21,7 @@ export default async function BuyersDashboard() {
   if (!gigsResult) return null
 
 	return (
-		<div className="min-h-screen bg-gradient-to-b from-purple-900 to-black text-white">
+		<div className="min-h-screen bg-background text-foreground">
 				{/* <Navbar session={session} /> */}
 				<main className="pt-20">
 					<BuyersHomepage session={session} gigs={gigsResult?.gigs || []} />

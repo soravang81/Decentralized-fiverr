@@ -33,7 +33,7 @@ export const Navbar = ({session}:{session:Session | null}) => {
                 <section className="flex items-center">
                     <Link href={"/dashboard"}>
                         <motion.span 
-                            className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600"
+                            className="text-3xl font-bold bg-clip-text text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]"
                             whileHover={{ scale: 1.05 }}
                         >
                             DFiverr
