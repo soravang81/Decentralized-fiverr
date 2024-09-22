@@ -153,6 +153,12 @@ export const getOrders = async ({ user }: { user: "BUYER" | "SELLER" }): Promise
                         username : true
                     }
                 },
+                escrow : {
+                    select : {
+                        address : true,
+                        status : true
+                    }
+                },
                 seller: {
                     include : {
                         user : {

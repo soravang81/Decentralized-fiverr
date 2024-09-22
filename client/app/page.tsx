@@ -144,7 +144,7 @@ function FeaturesSection() {
           ))}
         </div>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-900 to-black opacity-50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black opacity-50" />
     </section>
   )
 }
@@ -169,7 +169,7 @@ function FeatureCard({ feature, index }: { feature: { icon: React.ElementType; t
         visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: index * 0.1 } }
       }}
     >
-      <Card className="bg-purple-900 bg-opacity-50 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-xl h-full border-purple-500 hover:border-pink-500 transition-all duration-300 transform hover:scale-105">
+      <Card className="bg-purple-950 bg-opacity-50 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-xl h-full border-purple-800 hover:border-orange-300 transition-all duration-300 transform hover:scale-105">
         <feature.icon className="w-12 h-12 mb-4 text-purple-400" />
         <h3 className="text-xl font-semibold mb-2 text-purple-200">{feature.title}</h3>
         <p className="text-purple-300">{feature.description}</p>
@@ -236,7 +236,7 @@ function CallToActionSection() {
 
 function Footer() {
   return (
-    <footer className="bg-black bg-opacity-80 py-8 px-4">
+    <footer className="bg-black bg-opacity-80 py-8 px-4 border-t">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         <motion.div 
           className="text-3xl font-bold mb-4 md:mb-0 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600"

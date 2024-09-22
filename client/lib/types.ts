@@ -24,6 +24,10 @@ export interface IGetOrders {
   status : OrderStatus,
   package : PricingPackage
   paymentStatus : PaymentStatus,
+  escrow : {
+    address : string,
+    status : EscrowStatus
+  } | null
   buyer : {
     name : string | null,
     username : string

@@ -5,6 +5,7 @@ import { Star, Heart } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { IGetGigs } from "@/lib/types"
+import { LikeButton } from "./buttons"
 
 
 export const BuyerGigs = ({ gigs }: { gigs: IGetGigs[] }) => {
@@ -23,11 +24,8 @@ export const BuyerGigs = ({ gigs }: { gigs: IGetGigs[] }) => {
                   objectFit="cover"
                   className="transition-transform hover:scale-105"
                 />
-                <button className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-sm hover:bg-gray-100">
-                  <Heart className="w-4 h-4 text-gray-600" />
-                </button>
+                <LikeButton/>
               </div>
-            </Link>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
@@ -39,11 +37,11 @@ export const BuyerGigs = ({ gigs }: { gigs: IGetGigs[] }) => {
                 </div>
                 <Badge variant="secondary">Level 2</Badge>
               </div>
-              <Link href={`/gig/${gig.id}`} className="block">
+              {/* <Link href={`/gig/${gig.id}`} className="block"> */}
                 <h3 className="text-lg font-semibold leading-tight mb-2 hover:text-primary transition-colors line-clamp-2">
                   {gig.title}
                 </h3>
-              </Link>
+              {/* </Link> */}
               <div className="flex items-center space-x-1 text-sm text-yellow-500 mb-2">
                 <Star className="w-4 h-4 fill-current" />
                 <span className="font-medium">{4.5.toFixed(1)}</span>
@@ -56,6 +54,7 @@ export const BuyerGigs = ({ gigs }: { gigs: IGetGigs[] }) => {
                 </span>
               </div>
             </CardContent>
+            </Link>
           </Card>
         ))}
       </div>

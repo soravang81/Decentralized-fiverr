@@ -30,8 +30,19 @@ export default async function SellerOrdersPage () {
                      <div className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p>
                         <section className="flex flex-col gap-1 ml-4">
-                           <p className="text-gray-500">By : {order.seller.name}</p>
-                           <p className="text-gray-500">{getTimeDifference(order.createdAt)}</p>
+                           <p className="text-gray-500">By : {order.buyer.name}</p>
+                           <p className="text-foreground">
+                                Escrow Address:{" "}
+                                <a 
+                                    href={`https://explorer.solana.com/address/${order.escrow?.address}?cluster=devnet`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="cursor-pointer hover:underline"
+                                >
+                                    {order.escrow?.address.slice(0, 6)}...{order.escrow?.address.slice(-4)}
+                                </a>
+                            </p>
+                            <p className="text-gray-500">{getTimeDifference(order.createdAt)}</p>
                         </section>
                      </div>
                      <div className="flex flex-col gap-2">
@@ -56,6 +67,17 @@ export default async function SellerOrdersPage () {
                         <section className="flex flex-col gap-1 ml-4">
                            <p className="text-gray-500">For : {order.seller.name}</p>
                            <p className="text-gray-500">{getTimeDifference(order.createdAt)}</p>
+                           <p className="text-foreground">
+                                Escrow Address:{" "}
+                                <a 
+                                    href={`https://explorer.solana.com/address/${order.escrow?.address}?cluster=devnet`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="cursor-pointer hover:underline"
+                                >
+                                    {order.escrow?.address.slice(0, 6)}...{order.escrow?.address.slice(-4)}
+                                </a>
+                            </p>
                            <p className="text-gray-500 text-wrap">Deadline : {order.deadline.toString()}</p>
                         </section>
                      </div>
@@ -79,8 +101,17 @@ export default async function SellerOrdersPage () {
                      <section className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p> 
                         <p className="text-gray-500 ml-2">For : {order.seller.name}</p>
-                     </section>
-                     <section>
+                        <p className="text-foreground">
+                                Escrow Address:{" "}
+                                <a 
+                                    href={`https://explorer.solana.com/address/${order.escrow?.address}?cluster=devnet`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="cursor-pointer hover:underline"
+                                >
+                                    {order.escrow?.address.slice(0, 6)}...{order.escrow?.address.slice(-4)}
+                                </a>
+                            </p>
                         <p className="text-gray-500">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>
                      </section>
                   </div>
@@ -94,6 +125,17 @@ export default async function SellerOrdersPage () {
                      <section className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p> 
                         <p className="text-gray-500 ml-2">For : {order.seller.name}</p>
+                        <p className="text-foreground">
+                              Escrow Address:{" "}
+                              <a 
+                                 href={`https://explorer.solana.com/address/${order.escrow?.address}?cluster=devnet`} 
+                                 target="_blank" 
+                                 rel="noopener noreferrer"
+                                 className="cursor-pointer hover:underline"
+                              >
+                                 {order.escrow?.address.slice(0, 6)}...{order.escrow?.address.slice(-4)}
+                              </a>
+                        </p>
                      </section>
                      <section>
                         <p className="text-gray-500">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>

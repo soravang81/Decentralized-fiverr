@@ -9,6 +9,8 @@ import { motion } from 'framer-motion';
 import { ShoppingBagIcon, SearchIcon, MessageCircleIcon, StarIcon } from 'lucide-react';
 import { IGigExtended } from "@/app/gig/[id]/page";
 import { BuyerGigs } from './buyerGigs';
+import Feedback from './feedback';
+import { toast } from 'sonner';
 
 interface BuyersHomepageProps {
   session: Session | null;
@@ -19,7 +21,8 @@ interface QuickActionCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
-  link: string;
+  link?: string;
+  onClick? : () => void
 }
 
 export const BuyersHomepage: React.FC<BuyersHomepageProps> = ({ session, gigs }) => {
@@ -67,7 +70,7 @@ export const BuyersHomepage: React.FC<BuyersHomepageProps> = ({ session, gigs })
           icon={<SearchIcon className="w-8 h-8 text-purple-400" />}
           title="Browse Gigs"
           description="Explore talented freelancers"
-          link="/dashboard"
+          link='/dashboard'
         />
         <QuickActionCard
           icon={<ShoppingBagIcon className="w-8 h-8 text-green-400" />}
@@ -79,14 +82,11 @@ export const BuyersHomepage: React.FC<BuyersHomepageProps> = ({ session, gigs })
           icon={<MessageCircleIcon className="w-8 h-8 text-blue-400" />}
           title="Messages"
           description="Chat with your freelancers"
-          link="/messages"
+          onClick={() => {
+            toast.info("Coming Soon !")
+          }}
         />
-        <QuickActionCard
-          icon={<StarIcon className="w-8 h-8 text-yellow-400" />}
-          title="Leave Feedback"
-          description="Rate your completed orders"
-          link="/feedback"
-        />
+        <Feedback/>
       </motion.div>
 
       <motion.div variants={itemVariants}>
@@ -103,8 +103,8 @@ export const BuyersHomepage: React.FC<BuyersHomepageProps> = ({ session, gigs })
   );
 };
 
-const QuickActionCard: React.FC<QuickActionCardProps> = ({ icon, title, description, link }) => (
-  <Link href={link}>
+const QuickActionCard: React.FC<QuickActionCardProps> = ({ icon, title, description, link , onClick}) => {
+  return  <Link href={link ?? "#"} onClick={onClick}>
     <Card className="bg-purple-800 bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 cursor-pointer transform hover:scale-105">
       <CardContent className="p-6 flex flex-col items-center text-center">
         {icon}
@@ -113,4 +113,4 @@ const QuickActionCard: React.FC<QuickActionCardProps> = ({ icon, title, descript
       </CardContent>
     </Card>
   </Link>
-);
+}

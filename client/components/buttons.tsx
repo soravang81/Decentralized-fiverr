@@ -5,7 +5,7 @@ import { Session } from "next-auth";
 import { Button } from "./ui/button";
 import { signIn, signOut } from "next-auth/react";
 import { currentRole } from "@/lib/recoil/atoms";
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import '@solana/wallet-adapter-react-ui/styles.css';
 import styled from 'styled-components';
@@ -14,6 +14,8 @@ import { UserRole } from "@prisma/client";
 import { toast } from "sonner";
 import { useRole } from "@/lib/recoil/selector";
 import { replyOrder } from "@/app/actions/buyer/orders";
+import { Heart } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const RoleToggleButton = ({ session }: { session: Session | null }) => {
   const [currentrole, setCurrentRole] = useRecoilState<UserRole>(currentRole);
@@ -146,4 +148,29 @@ export const OrderButtons = ({orderId}:{orderId:string}) => {
     }}>Reject</Button>
     </>
 }
+export const LikeButton = () => {
+  const [liked, setLiked] = useState(false);
 
+  return (
+    <button
+      className={`absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-sm hover:bg-gray-100 ${
+        liked ? "text-red-600" : "text-gray-600"
+      }`}
+      onClick={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        setLiked(!liked)
+      }}
+    >
+      <motion.div
+        initial={{ scale: 1 }}
+        animate={{ scale: liked ? [1.2, 1.7, 1.2] : 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Heart
+          className={`w-4 h-4 ${liked ? "fill-current" : ""}`}
+        />
+      </motion.div>
+    </button>
+  );
+};
