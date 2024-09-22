@@ -1,6 +1,8 @@
 "use server"
 
 import fs from "fs"
+import prisma from "@/db/db"
+import { hash } from "bcrypt"
 
 export const getOwnerSecretKey = (): number[] => {
     const WALLET_PATH = process.env.NEXT_PUBLIC_OWNER_WALLET || '/home/sourav/.config/solana/id.json';
@@ -38,4 +40,16 @@ export const EmailService = async (data:{
   } catch (error:any) {
     console.error('Error sending email:', error);
   }
+}
+
+
+export async function resetPassword(email: string, newPassword: string) {
+    const hashedPassword = await hash(newPassword, 10)
+    
+    await prisma.user.update({
+        where: {
+            username : email
+        },
+        data: { password: hashedPassword },
+    })
 }

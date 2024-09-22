@@ -20,7 +20,7 @@ export default async function SellerGIgs() {
   
   return <div className="flex flex-col p-8">
     <div className="flex justify-between">
-        <h1 className="text-4xl">Gigs</h1>
+        <h1 className="text-4xl font-semibold">Gigs</h1>
         <Link href={`/seller_dashboard/gigs/create-gig`}>
           <Button className="flex items-center gap-2 px-4 py-2">
             <PlusCircle size={20} />

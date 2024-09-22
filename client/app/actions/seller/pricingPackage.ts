@@ -1,4 +1,4 @@
-// "use server"
+"use server"
 import { CreatePricingPackageInput, EditPricingPackageInput } from "@/lib/types";
 import prisma from "@/db/db"
 
@@ -14,21 +14,21 @@ export const getPricingPackageByGigId = async (gigId: string) => {
         throw error;
     }
 }
-export const editPricingPackage = async (packages: EditPricingPackageInput) => {
+export const editPricingPackage = async (pkg: EditPricingPackageInput) => {
     try {
-        const updatedPricingPackage = await prisma.pricingPackage.update({
+        console.log(pkg);
+        await prisma.pricingPackage.update({
             where: {
-                id: packages.id
+                id: pkg.id
             },
             data: {
-                name: packages.name,
-                description: packages.description,
-                price: packages.price,
-                deliveryTime: packages.deliveryTime,
-                features: packages.features
+                name: pkg.name,
+                description: pkg.description,
+                price: pkg.price,
+                deliveryTime: pkg.deliveryTime,
+                features: pkg.features
             }
         });
-        return updatedPricingPackage;
     } catch (e) {
         console.error(e);
         throw e;
