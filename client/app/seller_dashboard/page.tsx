@@ -21,7 +21,7 @@ export default async function SellerDashboard() {
   if (!sellerProfileData) {
     return (
       <Container className="py-8">
-        <div className="bg-white p-8 rounded-lg shadow-xl max-w-md mx-auto">
+        <div className="bg-foreground p-8 rounded-lg shadow-xl max-w-md mx-auto">
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">No Seller Profile Found</h1>
           <p className="text-center text-gray-600 mb-8">Create a seller profile to access your dashboard and start freelancing.</p>
           <div className="flex justify-center">
@@ -45,7 +45,7 @@ export default async function SellerDashboard() {
       <h1 className="font-bold text-3xl text-gray-100 mb-8">Welcome, {sellerProfileData.name}</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
-          <Card className="mb-8 overflow-hidden bg-purple-800 bg-opacity-50">
+          <Card className="mb-8 overflow-hidden bg-foreground/5">
             <CardContent className="p-6">
               <div className="flex items-center gap-4 mb-6">
                 <img src={sellerProfileData.profilePicture} alt={sellerProfileData.name} className="w-20 h-20 rounded-full border-4 border-blue-500 object-cover"/>
@@ -70,7 +70,7 @@ export default async function SellerDashboard() {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-purple-800 bg-opacity-50">
+          <Card className="bg-foreground/5">
             <CardContent className="p-6">
               <h3 className="font-semibold text-lg text-gray-100 mb-4">Quick Actions</h3>
               <div className="space-y-3">
@@ -85,7 +85,7 @@ export default async function SellerDashboard() {
           </Card>
         </div>
         <div className="md:col-span-2">
-          <Card className="bg-purple-800 bg-opacity-50">
+          <Card className="bg-foreground/5">
             <CardContent className="p-6">
               <h3 className="font-semibold text-xl text-gray-100 mb-6">Recent Orders</h3>
               <Orders orders={sellerProfileData.orders} />

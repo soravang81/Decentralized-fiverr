@@ -6,19 +6,20 @@ import { motion, useScroll, useTransform, useSpring, useAnimation } from 'framer
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Globe, Code, Palette, MessageCircle, DollarSign, Shield, Mail, Twitter, Github } from 'lucide-react'
+import { Globe, Code, Palette, MessageCircle, DollarSign, Shield, Mail, Twitter, Github, MailIcon } from 'lucide-react'
 import { ReactNode } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { AuroraBackground } from '@/components/aurorabg'
 import { FlipWords } from '@/components/flipword'
+import { GithubIcon, TwitterIcon } from '@/lib/icons'
 
 export default function DfiverrLanding() {
   const { data: session } = useSession()
 
   return (
     <div className="min-h-screen w-full text-white overflow-x-hidden">
-      <div className="relative">
+      <div className="">
         <AuroraBackground>
           <ScrollArea className="h-screen w-full">
             <motion.div
@@ -29,7 +30,7 @@ export default function DfiverrLanding() {
                 duration: 0.8,
                 ease: "easeInOut",
               }}
-              className="relative z-10 flex flex-col gap-4 items-center justify-center px-4"
+              className="relative z-10 flex flex-col gap-4 items-center justify-center"
             >
               <HeroSection />
               <FeaturesSection />
@@ -51,7 +52,7 @@ function HeroSection() {
   const router = useRouter()
 
   return (
-    <div className="text-center py-10 flex-col gap-2 h-screen flex items-center justify-center border-b">
+    <div className="text-center py-10 flex-col gap-2 h-screen flex items-center justify-center border-b w-full">
       <div className="inline-block mb-4">
         <h1 className="text-3xl md:text-7xl font-bold text-indigo-100 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
           Revolutionize Your Freelancing with Solana
@@ -92,7 +93,7 @@ function ParticlesBackground() {
       {[...Array(50)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-full bg-purple-300 opacity-0"
+          className="absolute rounded-full bg-white opacity-0"
           style={{
             width: Math.random() * 5 + 1,
             height: Math.random() * 5 + 1,
@@ -116,17 +117,17 @@ function ParticlesBackground() {
 
 function FeaturesSection() {
   const features = [
-    { icon: Globe, title: "Global Talent Pool", description: "Access a worldwide network of skilled professionals" },
-    { icon: Code, title: "Smart Contracts", description: "Secure and transparent agreements powered by Solana" },
-    { icon: Palette, title: "Creative Freedom", description: "Unleash your potential in a decentralized marketplace" },
-    { icon: MessageCircle, title: "Secure Communication", description: "End-to-end encrypted messaging for your privacy" },
-    { icon: DollarSign, title: "Fast Payments", description: "Lightning-fast transactions using Solana" },
-    { icon: Shield, title: "Escrow Services", description: "Secure fund management for project milestones" },
+    { icon: Globe, title: "Global Talent Pool", description: "Access a worldwide network of skilled professionals", color: "text-blue-400" },
+    { icon: Code, title: "Smart Contracts", description: "Secure and transparent agreements powered by Solana", color: "text-green-400" },
+    { icon: Palette, title: "Creative Freedom", description: "Unleash your potential in a decentralized marketplace", color: "text-orange-400" },
+    { icon: MessageCircle, title: "Secure Communication", description: "End-to-end encrypted messaging for your privacy", color: "text-yellow-400" },
+    { icon: DollarSign, title: "Fast Payments", description: "Lightning-fast transactions using Solana", color: "text-green-400" },
+    { icon: Shield, title: "Escrow Services", description: "Secure fund management for project milestones", color: "text-red-500" },
   ]
 
   return (
-    <section className="py-20 px-4 relative overflow-hidden border-b">
-      <div className="container mx-auto relative z-10 flex flex-col items-center justify-center gap-16">
+    <section className="py-20 relative overflow-hidden border-b w-full">
+      <div className="container relative z-10 flex flex-col items-center justify-center gap-16">
         <motion.h2 
           className="text-5xl font-bold mb-12 text-center text-gray-300"
           initial={{ opacity: 0, y: 50 }}
@@ -150,6 +151,7 @@ interface Feature {
   icon: React.ElementType;
   title: string;
   description: string;
+  color: string;
 }
 
 function FeatureCard({ feature, index }: { feature: Feature, index: number }) {
@@ -172,9 +174,9 @@ function FeatureCard({ feature, index }: { feature: Feature, index: number }) {
         visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: index * 0.1 } }
       }}
     >
-      <Card className="bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-xl h-full border-purple-800 hover:border-orange-300 transition-all duration-300 transform hover:scale-105">
-        <feature.icon className="w-12 h-12 mb-4 text-purple-400" />
-        <h3 className="text-xl font-semibold mb-2 text-purple-200">{feature.title}</h3>
+      <Card className="bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-xl h-full border-purple-800 hover:border-orange-300 transition-all hover:cursor-default duration-300 transform hover:scale-105">
+        <feature.icon className={`w-12 h-12 mb-4 ${feature.color}`} />
+        <h3 className="text-xl font-semibold mb-2 text-foreground">{feature.title}</h3>
         <p className="text-foreground">{feature.description}</p>
       </Card>
     </motion.div>
@@ -208,7 +210,7 @@ function CallToActionSection() {
           Join the Dfiverr Revolution
         </motion.h2>
         <motion.p 
-          className="text-xl mb-8 text-purple-200"
+          className="text-xl mb-8 text-foreground"
           variants={{
             hidden: { opacity: 0, y: 50 },
             visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.2 } }
@@ -255,9 +257,9 @@ function Footer() {
           <FooterLink href="mailto:souravangral18@gmail.com">Contact</FooterLink>
         </nav>
         <div className="flex space-x-4">
-          <SocialIcon href="https://twitter.com/sourxv_me" Icon={Twitter} />
-          <SocialIcon href="https://github.com/soravang81" Icon={Github} />
-          <SocialIcon href="mailto:souravangral18@gmail.com" Icon={Mail} />
+          <SocialIcon href="https://twitter.com/sourxv_me" Icon={TwitterIcon} />
+          <SocialIcon href="https://github.com/soravang81" Icon={GithubIcon} />
+          <SocialIcon href="mailto:souravangral18@gmail.com" Icon={MailIcon} />
         </div>
       </div>
       <div className="text-center mt-8 text-sm text-foreground">

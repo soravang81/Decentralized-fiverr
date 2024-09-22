@@ -32,7 +32,7 @@ export default function Messages () {
         setMessages([...messages, newMessageObject]);
         setNewMessage("");
     };
-    if(true) return <h1 className="text-3xl font-bold">Coming Soon...</h1>
+    if(true) return <h1 className="text-3xl font-bold text-center mt-20">Coming Soon...</h1>
     return (
         <div className="container py-20">
             <div className="flex flex-col justify-between">

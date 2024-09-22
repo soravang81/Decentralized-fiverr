@@ -24,14 +24,14 @@ export default async function SellerOrdersPage () {
             <TabsTrigger value="delivered" className="w-full">Delivered</TabsTrigger>
          </TabsList>
          <TabsContent value="pending">
-            <div className="flex flex-col gap-4 ">
+            <div className="flex flex-col gap-4">
                {pendingOrders.map(order => (
-                  <div key={order.id} className=" p-4  rounded-lg border flex justify-between shadow-md">
+                  <div key={order.id} className="p-4 rounded-lg border flex flex-col md:flex-row justify-between shadow-md">
                      <div className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p>
                         <section className="flex flex-col gap-1 ml-4">
                            <p className="text-gray-500">By : {order.buyer.name}</p>
-                           <p className="text-foreground">
+                           {order.escrow?.address && <p className="text-foreground">
                                 Escrow Address:{" "}
                                 <a 
                                     href={`https://explorer.solana.com/address/${order.escrow?.address}?cluster=devnet`} 
@@ -41,7 +41,7 @@ export default async function SellerOrdersPage () {
                                 >
                                     {order.escrow?.address.slice(0, 6)}...{order.escrow?.address.slice(-4)}
                                 </a>
-                            </p>
+                            </p>}
                             <p className="text-gray-500">{getTimeDifference(order.createdAt)}</p>
                         </section>
                      </div>
@@ -58,9 +58,9 @@ export default async function SellerOrdersPage () {
             </div>
          </TabsContent>
          <TabsContent value="active">
-            <div className="flex flex-col gap-4 ">
+            <div className="flex flex-col gap-4">
                {activeOrders.map(order => (
-                  <div key={order.id} className=" px-8 p-4 rounded-lg flex justify-between border shadow-md">
+                  <div key={order.id} className="px-8 p-4 rounded-lg flex flex-col md:flex-row justify-between border shadow-md">
                      <div className="flex flex-col">
                         <p className="text-lg font-semibold ">{order.gig.title}</p>
                         {/* TODO : Add go to profile (make a profile section first for both buyer and seller dash) */}
@@ -95,9 +95,9 @@ export default async function SellerOrdersPage () {
             </div>
          </TabsContent>
          <TabsContent value="cancelled">
-            <div className="flex flex-col gap-4 ">
+            <div className="flex flex-col gap-4">
                {cancelledOrders.map(order => (
-                  <div key={order.id} className=" p-4  rounded-lg border flex justify-between shadow-md">
+                  <div key={order.id} className="p-4 rounded-lg border flex flex-col md:flex-row justify-between shadow-md">
                      <section className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p> 
                         <p className="text-gray-500 ml-2">For : {order.seller.name}</p>
@@ -119,9 +119,9 @@ export default async function SellerOrdersPage () {
             </div>
          </TabsContent>
          <TabsContent value="delivered">
-            <div className="flex flex-col gap-4 ">
+            <div className="flex flex-col gap-4">
                {deliveredOrders.map(order => (
-                  <div key={order.id} className=" p-4  rounded-lg border flex justify-between shadow-md">
+                  <div key={order.id} className="p-4 rounded-lg border flex flex-col md:flex-row justify-between shadow-md">
                      <section className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p> 
                         <p className="text-gray-500 ml-2">For : {order.seller.name}</p>

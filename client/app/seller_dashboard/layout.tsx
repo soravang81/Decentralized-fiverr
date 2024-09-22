@@ -12,7 +12,7 @@ export default async function SellerDashboardLayout({
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-      <div className="min-h-screen bg-gradient-to-b from-purple-900 to-black text-white">
+      <div className="min-h-screen text-foreground">
         {/* <Navbar session={session} /> */}
         <div className="pt-16"> {/* Add padding-top to account for fixed navbar */}
           {children}

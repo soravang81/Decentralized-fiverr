@@ -34,11 +34,11 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
             <TabsTrigger value="completed" className="w-full">Completed</TabsTrigger>
         </TabsList>
         <TabsContent value="pending" className="pt-2">
-            <div className="flex flex-col gap-4 ">
+            <div className="flex flex-col gap-4">
                 {pendingOrders.map((order:IGetOrders, index:number) => {
                     if(!order.seller.wallet) return
-                    return <div key={index} className=" p-4 rounded-lg flex bg-foreground/5 justify-between border">
-                        <div className="">
+                    return <div key={index} className="p-4 rounded-lg flex flex-col md:flex-row bg-foreground/5 justify-between border">
+                        <div className="mb-4 md:mb-0">
                             <h2 className="text-xl font-semibold mb-2">{order.gig.title}</h2>
                             <p className="text-foreground">Description : {order.gig.description.substring(0,100)}...</p>
                             {order.escrow?.address && <p className="text-foreground">
@@ -54,13 +54,13 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
                             </p>}
                             <p className="text-foreground">Quantity : {order.quantity}</p>
                         </div>
-                        <div className="flex min-w-fit">
-                            <section className="flex flex-col">
+                        <div className="flex flex-col md:flex-row min-w-fit">
+                            <section className="flex flex-col mb-4 md:mb-0 md:mr-4">
                                 <p className="text-foreground text-2xl mb-1">${order.amount} x {order.quantity} = ${order.amount * order.quantity}</p>
                                 <p className="text-foreground">{getTimeDifference(order.createdAt)}</p>
                                 <p className="text-foreground">Status : {order.status}</p>
                             </section>
-                            <section className="ml-4 flex flex-col gap-2">
+                            <section className="flex flex-col gap-2">
                                 {order.status === "PROCESSING" || order.status === "PENDING" && <> 
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
@@ -99,8 +99,8 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
         <TabsContent value="active">
             <div className="flex flex-col gap-4">
                 {activeOrders.map((order:IGetOrders, index:number) => {
-                    return <div key={index} className=" p-4 rounded-lg flex justify-between">
-                        <div className="">
+                    return <div key={index} className="p-4 rounded-lg flex flex-col md:flex-row justify-between">
+                        <div className="mb-4 md:mb-0">
                             <h2 className="text-xl font-semibold mb-2">{order.gig.title}</h2>
                             <p className="text-foreground">{order.gig.description}</p>
                             <p className="text-foreground">
@@ -134,8 +134,8 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
         <TabsContent value="cancelled">
             <div className="flex flex-col gap-4">
                 {cancelledOrders.map((order:IGetOrders, index:number) => {
-                    return <div key={index} className=" p-4 rounded-lg flex justify-between">
-                        <div className="">
+                    return <div key={index} className="p-4 rounded-lg flex flex-col md:flex-row justify-between">
+                        <div className="mb-4 md:mb-0">
                             <h2 className="text-xl font-semibold mb-2">{order.gig.title}</h2>
                             <p className="text-foreground">
                                 Escrow Address:{" "}
@@ -161,8 +161,8 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
         <TabsContent value="completed">
             <div className="flex flex-col gap-4">
                 {deliveredOrders.map((order:IGetOrders, index:number) => {
-                    return <div key={index} className=" p-4 rounded-lg flex justify-between">
-                        <div className="">
+                    return <div key={index} className="p-4 rounded-lg flex flex-col md:flex-row justify-between">
+                        <div className="mb-4 md:mb-0">
                             <h2 className="text-xl font-semibold mb-2">{order.gig.title}</h2>
                             <p className="text-foreground">{order.gig.description}</p>
                             <p className="text-foreground">
