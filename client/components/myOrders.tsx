@@ -1,10 +1,7 @@
-"use client"
+// "use client"
 import { replyOrder } from "@/app/actions/buyer/orders"
 import { getTimeDifference } from "@/lib/utils"
 import { CancelOrder } from "./cancelOrder"
-import { useEffect, useState } from "react"
-import { useRecoilState } from "recoil"
-import { Orders } from "@/lib/recoil/atoms"
 import { IGetOrders } from "@/lib/types"
 import { MarkComplete } from "./markComplete"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
@@ -15,11 +12,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { toast } from "sonner"
 
 export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
-    const [orderz,setOrders] = useRecoilState(Orders)
-    useEffect(()=>{
-        console.log(orders)
-        setOrders(orders)
-    },[])
+    // const [orderz,setOrders] = useRecoilState(Orders)
+    // useEffect(()=>{
+    //     console.log(orders)
+    //     setOrders(orders)
+    // },[])
 
     const pendingOrders = orders.filter(order => ["PENDING", "ACCEPTED_BY_SELLER", "PAYMENT_PENDING"].includes(order.status))
     const activeOrders = orders.filter(order => ["PROCESSING" , "COMPLETED_BY_SELLER" , "COMPLETED_BY_BUYER"].includes(order.status))
@@ -80,9 +77,9 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
                                             <Button variant="default" className="w-full" onClick={async () => {
                                                 await replyOrder({orderId : order.id , reply : "REJECT_BY_BUYER"})
                                                 toast.success("Order Cancelled Successfully");
-                                                setOrders(orders.filter(o => {
-                                                    if(o.id === order.id) return {...o,status : "CANCELLED_BY_BUYER"}
-                                                }))
+                                                // setOrders(orders.filter(o => {
+                                                //     if(o.id === order.id) return {...o,status : "CANCELLED_BY_BUYER"}
+                                                // }))
                                             }} >Confirm</Button>
                                         </AlertDialogAction>
                                     </AlertDialogContent>    
@@ -123,7 +120,7 @@ export const MyOrders = ({orders}:{orders : IGetOrders[]}) => {
                             
                             </div>
                             <CancelOrder order={order} buyer />
-                            {order.status !== "COMPLETED_BY_BUYER" && <><MarkComplete order={order} client /></>}
+                            {order.status !== "COMPLETED_BY_BUYER" && order.status === "COMPLETED_BY_SELLER" && <><MarkComplete order={order} client /></>}
                             <p className="text-foreground">{getTimeDifference(order.createdAt)}</p>
                             <p className="text-foreground">Status : {order.status}</p>
                         </div>

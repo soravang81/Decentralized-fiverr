@@ -23,10 +23,8 @@ export default function ForgetPasswordPage() {
             return
         }
         try {
-            // Generate a 6-digit OTP
             const otp = Math.floor(100000 + Math.random() * 900000).toString()
             setLoading(true)
-            // Send email with OTP
             await sendEmail({
                 to: email,
                 subject: 'Password Reset OTP',

@@ -1,11 +1,8 @@
 "use client"
 
-import { getSellerProfileImage } from '@/app/actions/seller/sellerProfile';
 import { getSession, useSession } from 'next-auth/react';
 import { atom, selector, useRecoilCallback, useRecoilValue } from 'recoil';
 import { currentImage, currentRole } from './atoms';
-import { getServerSession, Session } from 'next-auth';
-import { authConfig } from '../auth';
 import { useEffect } from 'react';
 import { getLastRole } from '@/app/actions/buyer/role';
 import { getImage } from '@/app/actions/others/image';

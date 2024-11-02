@@ -213,3 +213,25 @@ export interface CreateSolWalletInput {
   privateKey: string;
   userId: string;
 }
+
+export type Message = {
+  id: string
+  senderId : string
+  receiverId : string
+  senderName? : string
+  sender?: {
+    id: string
+    name: string
+    username : string
+    profilePicture: string
+  },
+  receiver?: {
+    id: string
+    name: string
+    username : string
+    profilePicture: string
+  },
+  text: string
+  createdAt: Date | string
+  updatedAt?: Date | string
+};

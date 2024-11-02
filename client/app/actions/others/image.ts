@@ -8,10 +8,10 @@ import { UserRole } from "@prisma/client";
 
 export async function getImage() {
     const session = await getServerSession(authConfig);
+    // console.log(session)
     if (!session?.user?.id) return null;
-    // console.log("rolee--------------------"+role)
     const role = await getLastRole(session.user.id);
-    console.log(session)
-    if (role === "BUYER") return session.user.image;
-    return await getSellerProfileImage(session.user.id);
+    // console.log(session)
+    if (role === "BUYER" || role === "ADMIN") return session.user.image;
+    else return await getSellerProfileImage(session.user.id);
   }

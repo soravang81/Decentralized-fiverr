@@ -65,7 +65,7 @@ export default async function SellerOrdersPage () {
                         <p className="text-lg font-semibold ">{order.gig.title}</p>
                         {/* TODO : Add go to profile (make a profile section first for both buyer and seller dash) */}
                         <section className="flex flex-col gap-1 ml-4">
-                           <p className="text-gray-500">For : {order.seller.name}</p>
+                           <p className="text-gray-500">For : {order.buyer.name}</p>
                            <p className="text-gray-500">{getTimeDifference(order.createdAt)}</p>
                            <p className="text-foreground">
                                 Escrow Address:{" "}
@@ -100,7 +100,7 @@ export default async function SellerOrdersPage () {
                   <div key={order.id} className="p-4 rounded-lg border flex flex-col md:flex-row justify-between shadow-md">
                      <section className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p> 
-                        <p className="text-gray-500 ml-2">For : {order.seller.name}</p>
+                        <p className="text-gray-500 ml-2">For : {order.buyer.name}</p>
                         <p className="text-foreground">
                                 Escrow Address:{" "}
                                 <a 
@@ -124,7 +124,7 @@ export default async function SellerOrdersPage () {
                   <div key={order.id} className="p-4 rounded-lg border flex flex-col md:flex-row justify-between shadow-md">
                      <section className="flex flex-col">
                         <p className="font-semibold text-lg">{order.gig.title}</p> 
-                        <p className="text-gray-500 ml-2">For : {order.seller.name}</p>
+                        <p className="text-gray-500 ml-2">For : {order.buyer.name}</p>
                         <p className="text-foreground">
                               Escrow Address:{" "}
                               <a 

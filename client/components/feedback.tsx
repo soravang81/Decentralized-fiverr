@@ -11,7 +11,7 @@ import { toast } from "sonner"
 import useSendEmail from "@/lib/hooks"
 import { getSession, useSession } from "next-auth/react"
 
-export default function EnhancedFeedback() {
+export default function Feedback() {
   const [isOpen, setIsOpen] = useState(false)
   const [rating, setRating] = useState(0)
   const [feedback, setFeedback] = useState("")
@@ -81,7 +81,7 @@ export default function EnhancedFeedback() {
           <CardContent className="p-6 flex flex-col items-center text-center">
             <StarIcon className="w-8 h-8 text-yellow-400" />
             <h3 className="text-xl font-semibold mt-4 mb-2 ">Leave Feedback</h3>
-            <p className="">Rate your completed orders</p>
+            <p className="">Leave feedback about my work</p>
           </CardContent>
         </Card>
         </motion.div>

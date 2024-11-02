@@ -15,7 +15,6 @@ import { FlipWords } from '@/components/flipword'
 import { GithubIcon, TwitterIcon } from '@/lib/icons'
 
 export default function DfiverrLanding() {
-  const { data: session } = useSession()
 
   return (
     <div className="min-h-screen w-full text-white overflow-x-hidden">

@@ -29,7 +29,8 @@ export const SellerNavbar: React.FC = () => {
     const navItems = [
         { name: 'Dashboard', path: '/seller_dashboard' },
         { name: 'Gigs', path: `/seller_dashboard/gigs` },
-        { name: 'Orders', path: '/seller_dashboard/orders' }
+        { name: 'Orders', path: '/seller_dashboard/orders' },
+        { name: 'Messages', path: '/seller_dashboard/messages' }
     ];
     
     const pathname = usePathname();
@@ -46,7 +47,8 @@ export const SellerNavbar: React.FC = () => {
 
 export const BuyerNavbar: React.FC = () => {
     const navItems = [
-        { name: 'Orders', path: '/orders' }
+        { name: 'Orders', path: '/orders' },
+        { name: 'Messages', path: '/messages' }
     ];
     
     const pathname = usePathname();

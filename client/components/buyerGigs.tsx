@@ -37,11 +37,9 @@ export const BuyerGigs = ({ gigs }: { gigs: IGetGigs[] }) => {
                 </div>
                 <Badge variant="secondary">Level 2</Badge>
               </div>
-              {/* <Link href={`/gig/${gig.id}`} className="block"> */}
                 <h3 className="text-lg font-semibold leading-tight mb-2 hover:text-primary transition-colors line-clamp-2">
                   {gig.title}
                 </h3>
-              {/* </Link> */}
               <div className="flex items-center space-x-1 text-sm text-yellow-500 mb-2">
                 <Star className="w-4 h-4 fill-current" />
                 <span className="font-medium">{4.5.toFixed(1)}</span>

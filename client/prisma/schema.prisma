@@ -12,7 +12,7 @@ model User {
   id                      String                @id @default(uuid())
   username                String                @unique
   sub                     String                @default("")
-  name                    String?       
+  name                    String      
   bio                     String?       
   role                    UserRole              @default(BUYER)
   lastRole                UserRole              @default(BUYER)
@@ -21,9 +21,10 @@ model User {
   provider                Provider?        
   sellerProfile           SellerProfile?        
   orders                  Order[]               @relation("BuyerOrders")
-  reviews                 Review[]            
-}         
-
+  reviews                 Review[]             
+  sentMessages            Chat[]                @relation("SentMessages")
+  receivedMessages        Chat[]                @relation("ReceivedMessages")
+}
 model SellerProfile {         
   id                      String                @id @default(uuid())
   userId                  String                @unique
@@ -143,6 +144,17 @@ model Transaction {
   purpose                 TransactionPurpose    
   createdAt               DateTime              @default(now())
 }
+model Chat {
+  id                      String                @id @default(uuid())
+  senderId                String
+  receiverId              String
+  text                    String 
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  sender                  User                  @relation("SentMessages", fields: [senderId], references: [id])
+  receiver                User                  @relation("ReceivedMessages", fields: [receiverId], references: [id])
+}
+
 enum EscrowStatus {
   PENDING
   COMPLETED

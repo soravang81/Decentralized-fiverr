@@ -9,12 +9,12 @@ import { ThemeProvider } from "next-themes";
 import { ReactNode, useMemo } from "react";
 import { RecoilRoot } from "recoil";
 import { Toaster } from "sonner";
+import Socketwrapper from "./socketwrapper";
+import SocketListeners from "./socketListeners";
 
-function Providers({ children}:{children : ReactNode}) {
-    const network = WalletAdapterNetwork.Devnet;
-
+function Providers({ children }:{children : ReactNode }) {
+  const network = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
@@ -26,21 +26,23 @@ function Providers({ children}:{children : ReactNode}) {
 
     return (
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-
         <SessionProvider>
           <RecoilRoot>
             <Toaster expand={false} position="top-right" offset={3} duration={7000}/>
             <ConnectionProvider endpoint={endpoint}>
               <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
-                  {children}
+                  <Socketwrapper>
+                    <SocketListeners>
+                      {children}
+                    </SocketListeners>
+                  </Socketwrapper>
                 </WalletModalProvider>
               </WalletProvider>
             </ConnectionProvider>
           </RecoilRoot>
         </SessionProvider>
         </ThemeProvider>
-
     );
    }
    
