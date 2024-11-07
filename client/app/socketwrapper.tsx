@@ -2,6 +2,7 @@
 
 import Loader from '@/components/loader';
 import SocketManager from '@/lib/socketManager';
+import { set } from '@project-serum/anchor/dist/cjs/utils/features';
 import { getSession } from 'next-auth/react';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -37,6 +38,7 @@ const SocketWrapper = ({ children }: { children: ReactNode }) => {
           SocketManager.getInstance().disconnect();
           setIsConnected(false);
         }
+        setIsConnected(true);
       }
     };
 
