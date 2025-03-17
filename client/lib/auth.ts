@@ -64,7 +64,7 @@ export const authConfig: NextAuthOptions = {
       
           if (!user.email) {
             console.error("No email provided by OAuth provider");
-            return '/auth/error?error=NoEmail';
+            return '/auth/errorauthConfig?error=NoEmail';
           }
       
           // Check if user exists in your database
