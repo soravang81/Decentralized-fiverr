@@ -250,10 +250,10 @@ function Footer() {
           Dfiverr
         </motion.div>
         <nav className="flex space-x-4 mb-4 md:mb-0">
-          <FooterLink href="#">About</FooterLink>
+          {/* <FooterLink href="#">About</FooterLink>
           <FooterLink href="#">Terms</FooterLink>
           <FooterLink href="#">Privacy</FooterLink>
-          <FooterLink href="mailto:souravangral18@gmail.com">Contact</FooterLink>
+          <FooterLink href="mailto:souravangral18@gmail.com">Contact</FooterLink> */}
         </nav>
         <div className="flex space-x-4">
           <SocialIcon href="https://twitter.com/sourxv_me" Icon={TwitterIcon} />

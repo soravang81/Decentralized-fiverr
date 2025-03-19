@@ -25,7 +25,7 @@ function Providers({ children }:{children : ReactNode }) {
   );
 
     return (
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+      <ThemeProvider attribute="class" themes={["light", "dark"]} defaultTheme="dark" enableSystem={true}>
         <SessionProvider>
           <RecoilRoot>
             <Toaster expand={false} position="top-right" offset={3} duration={7000}/>

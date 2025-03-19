@@ -23,7 +23,18 @@ export const createTransaction = async (data: {
             }
         })
     } catch (e) {
-        console.error("Error creating transaction:", e);
+        console.error("Error creating transaction: ", e);
+        throw e;
+    }
+}
+export const getAllTransactions = async () => {
+    // const session = await getServerSession(authConfig);
+    // if(!session) throw new Error("Unauthorized");
+    try {
+        const res = (await prisma.transaction.findMany()).sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime())
+        return res
+    } catch (e) {
+        console.error("Error getting transaction: ", e);
         throw e;
     }
 }

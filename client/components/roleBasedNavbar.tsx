@@ -48,7 +48,8 @@ export const SellerNavbar: React.FC = () => {
 export const BuyerNavbar: React.FC = () => {
     const navItems = [
         { name: 'Orders', path: '/orders' },
-        { name: 'Messages', path: '/messages' }
+        { name: 'Messages', path: '/messages' },
+        { name: 'Recent Transactions', path: '/recent-transactions' }
     ];
     
     const pathname = usePathname();
