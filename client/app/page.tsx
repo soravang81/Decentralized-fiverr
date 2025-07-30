@@ -34,7 +34,7 @@ export default function DfiverrLanding() {
               <HeroSection />
               <FeaturesSection />
               <CallToActionSection />
-              <Footer />
+              {/* <Footer /> */}
             </motion.div>
           </ScrollArea>
         </AuroraBackground>
